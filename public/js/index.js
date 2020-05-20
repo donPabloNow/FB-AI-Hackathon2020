@@ -20,4 +20,22 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
       });
     })
   }
+  $scope.login = function(){
+    $http.get("/authUrl/").then(function(data) {
+      window.location = data.data.authUrl;
+    })
+    $scope.refreshPlaylist();
+  }
+  $scope.user = function(){
+    $http.get("/userInfo/").then(function(data) {
+      return data.data.user;
+    }).then( function(result){
+      $scope.userInfo = result;
+      console.log(result);
+    })
+  }
+  $scope.logout = function(){
+    $http.get("/logout/");
+    $scope.user();
+  }
 }]);
