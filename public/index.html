@@ -50,7 +50,10 @@
 				<div class="currently-playing" ng-bind-html="currentSong"></div>
 			  <h1 class="display-3 text-dark">{{results.entities.intent[0].value}}</h1>
 			</div>
-			
+			<button id="record">Record</button>
+			<button id="stop">Stop</button>
+			<div id="soundClips"></div>
+			<audio ></audio>
 			<form name="searchForm" ng-submit="query()">
 				<div class="form-group">
 					<input class="form-control" type="text" ng-model="search" name="search" placeholder="what kind of song do you want next" required>
