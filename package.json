@@ -1,0 +1,27 @@
+{
+  "name": "aihackathon",
+  "version": "1.0.0",
+  "description": "facebook ai hackathon",
+  "dependencies": {
+    "express": "^4.10.2",
+    "fs": "0.0.1-security",
+    "mongoose": "^5.9.1",
+    "node-wit": "^5.0.0",
+    "nodemon": "^2.0.2",
+    "request": "^2.88.2"
+  },
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/evanlazaro/THWOMP.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/peterg4/FB-AI-Hackathon2020/issues"
+  },
+  "homepage": "https://github.com/peterg4/FB-AI-Hackathon2020/#README"
+}

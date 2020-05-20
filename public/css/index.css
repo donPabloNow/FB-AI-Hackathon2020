@@ -1,0 +1,13 @@
+html {
+  font-family: 'Merriweather', serif;
+}
+body {
+  color: #111111;
+}
+nav{
+  color: white;
+  box-shadow: 0 2px 4px rgba(0,0,0,.08);
+}
+.bg-dark{
+  background-color: #141414!important;
+}
