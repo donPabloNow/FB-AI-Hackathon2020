@@ -36,12 +36,14 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
     var q =$scope.search;
     var id=$scope.currentSongId;
     var packet = {q, id};
+    console.log($scope.currentSongId);
     socket.emit('query', packet);
     socket.on('query_response', function(data) {
       console.log(data);
       $scope.$apply(function () {
         $scope.currentSongId = data.body.tracks[0].id;
         $scope.currentSong = $sce.trustAsHtml('<iframe src="https://open.spotify.com/embed/track/'+data.body.tracks[0].id+'" width="500" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>');
+        console.log($scope.currentSongId);
       });
     })
   }

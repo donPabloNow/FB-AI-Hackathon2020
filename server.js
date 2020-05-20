@@ -120,19 +120,85 @@ app.get('/', function(req, res){
 
 app.use(express.static('public'));
 
+var determine_change = function(changeData, feats) {
+  console.log(changeData.entities);
+  var changeString = changeData.entities.intent[0].value;
+  if(changeString === 'Instrumentalness_Up') {
+    feats.body.instrumentalness=1;
+    return feats;
+  }
+  if(changeString === 'Instrumentalness_Down') {
+    feats.body.instrumentalness=0;
+    return feats;
+  }
+ 
+  if(changeString === 'Valence_Up') {
+    feats.body.valence+=.7;
+    return feats;
+  }
+  if(changeString === 'Valence_Down') {
+    feats.body.valence-=.7;
+    return feats;
+  }
+
+  if(changeString === 'Tempo_Up') {
+    feats.body.tempo+=30
+    return feats;
+  }
+  if(changeString === 'Tempo_Down') {
+    feats.body.tempo-=30
+    return feats;
+  }
+
+  if(changeString === 'Energy_Up') {
+    feats.body.energy+=.30
+    return feats;
+  }
+  if(changeString === 'Energy_Down') {
+    feats.body.energy-=.30
+    return feats;
+  }
+
+  if(changeString === 'Danceability_Up') {
+    feats.body.danceability+=.30
+    return feats;
+  }
+  if(changeString === 'Danceability_Down') {
+    feats.body.danceability-=.30
+    return feats;
+  }
+
+  if(changeString === 'Speechiness_Up') {
+    feats.body.speechiness+=.33
+    return feats;
+  }
+  if(changeString === 'Speechiness_Down') {
+    feats.body.speechiness-=.33
+    return feats;
+  }
+
+  if(changeString === 'Loudness_Up') {
+    feats.body.speechiness+=5
+    return feats;
+  }
+  if(changeString === 'Loudness_Down') {
+    feats.body.speechiness-=5
+    return feats;
+  }
+}
 
 io.on('connection', function(socket){ 
 
   socket.on('query', function(packet) { //take query and current song id
     client.message(packet.q, {}).then((data) => {
-      spotifyApi.getAudioFeaturesForTrack(packet.id).then(function(feats) {
-        spotifyApi.getRecommendations({limit: 50, seed_tracks: [packet.id],
-          min_tempo: feats.body.tempo-15, max_tempo: feats.body.tempo + 15, min_danceability: feats.body.danceability-.3, max_danceability: feats.body.danceability+.3,
-          min_energy: feats.body.energy-.3, max_energy: feats.body.energy+.3, min_key: feats.body.key -3, max_key: feats.body.key+3, min_instrumentalness: feats.body.instrumentalness-.3,
-          max_instrumentalness: feats.body.instrumentalness+.3, min_liveness: feats.body.liveness-.3, max_liveness: feats.body.liveness+.3, min_acousticness: feats.body.acousticness-.3,
-          max_acousticness: feats.body.acousticness+.3, min_valence: feats.body.valence-.35, max_valence: feats.body.valence+.35
+      spotifyApi.getAudioFeaturesForTrack(packet.id).then(async function(feats) {
+        console.log(packet.id);
+        if(data)
+          feats = await determine_change(data, feats);
+        spotifyApi.getRecommendations({limit: 1, seed_tracks: [packet.id],
+         target_tempo: feats.body.tempo, target_danceability: feats.body.danceability, target_energy: feats.body.energy, target_key: feats.body.key, target_instrumentalness: feats.body.instrumentalness,
+         target_liveness: feats.body.liveness, target_acousticness: feats.body.acousticness, target_valence: feats.body.valence, target_loudness: feats.body.loudness, target_speechiness: feats.body.speechiness
         }).then(function(recs) {
-          console.log(recs);
           socket.emit('query_response', recs); //search using curr id as seed and adjust audio features by query  results
         });
       });
