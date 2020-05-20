@@ -41,8 +41,19 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
     socket.on('query_response', function(data) {
       console.log(data);
       $scope.$apply(function () {
-        $scope.currentSongId = data.body.tracks[0].id;
-        $scope.currentSong = $sce.trustAsHtml('<iframe src="https://open.spotify.com/embed/track/'+data.body.tracks[0].id+'" width="500" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>');
+        $scope.currentSongId = data[0].body.tracks[0].id;
+        $scope.features = [];
+        $scope.features.push(['{\'height\': \''+data[1].body.danceability*500+'px\'}','Danceability']);
+        $scope.features.push(['{\'height\': \''+data[1].body.energy*500+'px\'}','Energy']);
+        $scope.features.push(['{\'height\': \''+data[1].body.loudness*-8+'px\'}','Loudness']);
+        $scope.features.push(['{\'height\': \''+data[1].body.speechiness*500+'px\'}','Speechiness']);
+        $scope.features.push(['{\'height\': \''+data[1].body.acousticness*500+'px\'}','Acousticness']);
+        $scope.features.push(['{\'height\': \''+data[1].body.instrumentalness*500+'px\'}','Instrumentalness']);
+        $scope.features.push(['{\'height\': \''+data[1].body.liveness*500+'px\'}','Liveness']);
+        $scope.features.push(['{\'height\': \''+data[1].body.valence*500+'px\'}','Valence']);
+        $scope.features.push(['{\'height\': \''+data[1].body.tempo*2.4+'px\'}','Tempo']);
+
+        $scope.currentSong = $sce.trustAsHtml('<iframe src="https://open.spotify.com/embed/track/'+data[0].body.tracks[0].id+'" width="500" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>');
         console.log($scope.currentSongId);
       });
     })

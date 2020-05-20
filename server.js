@@ -15,7 +15,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 const client = new Wit({
   accessToken: 'PPXFLS65PXL3DHVFHFUOYC5VGCKPDUS4',
-  logger: new log.Logger(log.DEBUG) // optional
 });
 
 var USERID;
@@ -203,7 +202,7 @@ io.on('connection', function(socket){
          target_tempo: feats.body.tempo, target_danceability: feats.body.danceability, target_energy: feats.body.energy, target_key: feats.body.key, target_instrumentalness: feats.body.instrumentalness,
          target_liveness: feats.body.liveness, target_acousticness: feats.body.acousticness, target_valence: feats.body.valence, target_loudness: feats.body.loudness, target_speechiness: feats.body.speechiness
         }).then(function(recs) {
-          socket.emit('query_response', recs); //search using curr id as seed and adjust audio features by query  results
+          socket.emit('query_response', [recs, feats]); //search using curr id as seed and adjust audio features by query  results
         });
       });
     });
