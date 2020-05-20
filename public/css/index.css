@@ -119,3 +119,10 @@ nav{
 .vert-bars{
   width: fit-content;
 }
+.form-control{
+  max-width: 500px;
+  margin: 0 auto;
+}
+.hidden{
+  display: none;
+}

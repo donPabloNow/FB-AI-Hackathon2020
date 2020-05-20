@@ -22,7 +22,7 @@
 	<script type="text/javascript" src="js/index.js"></script>
 	<link rel="icon" type="image/png" sizes="16x16" href="favicon.ico">
 </head>
-<body ng-controller="mainController" class="bg-dark" ng-init="user()">
+<body ng-controller="mainController" class="bg-dark" ng-init="user();getStats()">
 	<!-- Navigation bar -->
 		<nav class="navbar navbar-expand-lg navbar-dark text-light bg-dark">
 			<a class="navbar-brand" href="#">Navbar</a>
@@ -32,26 +32,6 @@
 		
 			<div class="collapse navbar-collapse" id="navbarSupportedContent">
 				<ul class="navbar-nav mr-auto">
-					<li class="nav-item active">
-						<a class="nav-link active" id="home" ng-click="view=0;changeActive('home')" href="#">Home</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" id="profile" ng-click="changeActive('profile');getStats()" href="#">Profile</a>
-					</li>
-					<li class="nav-item dropdown">
-						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-							Dropdown
-						</a>
-						<div class="dropdown-menu" aria-labelledby="navbarDropdown">
-							<a class="dropdown-item" href="#">Action</a>
-							<a class="dropdown-item" href="#">Another action</a>
-							<div class="dropdown-divider"></div>
-							<a class="dropdown-item" href="#">Something else here</a>
-						</div>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link disabled" href="#">Disabled</a>
-					</li>
 				</ul>
 				<form class="form-inline my-2 my-lg-0" ng-if="!userInfo" ng-submit="login()">
 					<input class="btn btn-outline-success my-2 my-sm-0" type="submit" value="Login">
@@ -75,7 +55,7 @@
 					<input class="form-control" type="text" ng-model="search" name="search" placeholder="what kind of song do you want next" required>
 				</div>
 				<div class="form-group">
-					<input class="btn btn-primary" type="submit" value="search">
+					<input class="hidden btn btn-primary" type="submit" value="search">
 				</div>
 			</form>
 
