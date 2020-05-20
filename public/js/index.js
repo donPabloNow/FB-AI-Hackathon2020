@@ -24,6 +24,7 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
   $scope.arts = [];
   $scope.features= [];
   $scope.userInfo;
+  $scope.currentSong;
   $scope.changeActive = function(id) {
     document.getElementById($scope.currid).className = 'nav-link'; 
     document.getElementById(id).className = 'nav-link active';
@@ -115,6 +116,12 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
       $scope.features.push(['{\'height\': \''+averages[8]*700+'px\'}','Liveness']);
       $scope.features.push(['{\'height\': \''+averages[9]*700+'px\'}','Valence']);
       $scope.features.push(['{\'height\': \''+averages[10]*4+'px\'}','Tempo']);
+    })
+  }
+  $scope.getMyRecent = function() {
+    $http.get("/getMyRecent").then(function(data) {
+      console.log(data.data.data.body.items[0].track.id);
+      $scope.currentSong = $sce.trustAsHtml('<iframe src="https://open.spotify.com/embed/track/'+data.data.data.body.items[0].track.id+'" width="500" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>');
     })
   }
 }]);

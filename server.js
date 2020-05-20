@@ -107,6 +107,11 @@ app.get('/stats/detailed', function(req, res) {
   });
 })
 
+app.get('/getMyRecent', function(req, res) {
+  spotifyApi.getMyRecentlyPlayedTracks().then(function(data) {
+    res.json({data:data});
+  })
+})
 app.use(express.static('public'));
 
 app.get('/', function(req, res){

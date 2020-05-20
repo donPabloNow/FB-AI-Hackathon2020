@@ -22,7 +22,7 @@
 	<script type="text/javascript" src="js/index.js"></script>
 	<link rel="icon" type="image/png" sizes="16x16" href="favicon.ico">
 </head>
-<body ng-controller="mainController" class="bg-dark" ng-init="user();getStats()">
+<body ng-controller="mainController" class="bg-dark" ng-init="user();getStats();getMyRecent()">
 	<!-- Navigation bar -->
 		<nav class="navbar navbar-expand-lg navbar-dark text-light bg-dark">
 			<a class="navbar-brand" href="#">Navbar</a>
@@ -47,6 +47,7 @@
 	  <main role="main" ng-show="view==0">
 		<div class="jumbotron theme over slide">
 		  <div class="container">
+				<div class="currently-playing" ng-bind-html="currentSong"></div>
 			  <h1 class="display-3 text-dark">{{results.entities.intent[0].value}}</h1>
 			</div>
 			

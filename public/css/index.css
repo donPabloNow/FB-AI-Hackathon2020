@@ -126,3 +126,7 @@ nav{
 .hidden{
   display: none;
 }
+.currently-playing{
+  width: fit-content;
+  margin: 0 auto;
+}
