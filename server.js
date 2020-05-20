@@ -123,10 +123,20 @@ app.use(express.static('public'));
 
 io.on('connection', function(socket){ 
 
-  socket.on('query', function(packet) {
-    client.message(packet, {}).then((data) => {
-      socket.emit('query_response', data);
-    })
+  socket.on('query', function(packet) { //take query and current song id
+    client.message(packet.q, {}).then((data) => {
+      spotifyApi.getAudioFeaturesForTrack(packet.id).then(function(feats) {
+        spotifyApi.getRecommendations({limit: 50, seed_tracks: [packet.id],
+          min_tempo: feats.body.tempo-15, max_tempo: feats.body.tempo + 15, min_danceability: feats.body.danceability-.3, max_danceability: feats.body.danceability+.3,
+          min_energy: feats.body.energy-.3, max_energy: feats.body.energy+.3, min_key: feats.body.key -3, max_key: feats.body.key+3, min_instrumentalness: feats.body.instrumentalness-.3,
+          max_instrumentalness: feats.body.instrumentalness+.3, min_liveness: feats.body.liveness-.3, max_liveness: feats.body.liveness+.3, min_acousticness: feats.body.acousticness-.3,
+          max_acousticness: feats.body.acousticness+.3, min_valence: feats.body.valence-.35, max_valence: feats.body.valence+.35
+        }).then(function(recs) {
+          console.log(recs);
+          socket.emit('query_response', recs); //search using curr id as seed and adjust audio features by query  results
+        });
+      });
+    });
   });
 
 });

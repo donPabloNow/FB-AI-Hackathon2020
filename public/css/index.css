@@ -8,11 +8,22 @@ nav{
   color: white;
   box-shadow: 0 2px 4px rgba(0,0,0,.08);
 }
+.theme{
+  background-image: linear-gradient(-225deg, #22E1FF 0%, #1D8FE1 48%, #22E1FF 100%);
+}
 .bg-dark{
   background-color: #141414!important;
 }
 .stats{
   color:white;
+}
+.btn-outline-success{
+  color: #22E1FF;
+  border-color: #22E1FF;
+}
+.btn-outline-success:hover {
+  background-image: linear-gradient(-225deg, #22E1FF 0%, #1D8FE1 48%, #22E1FF 100%);
+  border-color: #22E1FF;
 }
 .bar{
   background-color: #333333;
@@ -72,13 +83,13 @@ nav{
   float: right;
 }
 .bar-end{
-  background-color: #2ebd59;
+  background-image: linear-gradient(-225deg, #22E1FF 0%, #1D8FE1 48%, #22E1FF 100%);
   height: 58px;
   width: 6px;
   float: right;
 }
 .bar-end-left{
-  background-color: #2ebd59;
+  background-image: linear-gradient(-225deg, #22E1FF 0%, #1D8FE1 48%, #22E1FF 100%);
   height: 58px;
   width: 6px;
   float: left;
@@ -87,7 +98,7 @@ nav{
   position: absolute;
   bottom: 0px;
   right: 0px;
-  background-color: #2ebd59;
+  background-image: linear-gradient(-225deg, #22E1FF 0%, #1D8FE1 48%, #22E1FF 100%);
   width: 58px;
   height: 6px;
 }
@@ -128,5 +139,7 @@ nav{
 }
 .currently-playing{
   width: fit-content;
+  height: 82px;
   margin: 0 auto;
+  border: 1px solid black;
 }

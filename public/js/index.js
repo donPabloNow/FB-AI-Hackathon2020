@@ -25,6 +25,7 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
   $scope.features= [];
   $scope.userInfo;
   $scope.currentSong;
+  $scope.currentSongId;
   $scope.changeActive = function(id) {
     document.getElementById($scope.currid).className = 'nav-link'; 
     document.getElementById(id).className = 'nav-link active';
@@ -32,10 +33,15 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
   }
 
   $scope.query = function() {
-    socket.emit('query', $scope.search);
+    var q =$scope.search;
+    var id=$scope.currentSongId;
+    var packet = {q, id};
+    socket.emit('query', packet);
     socket.on('query_response', function(data) {
+      console.log(data);
       $scope.$apply(function () {
-        $scope.results = data;
+        $scope.currentSongId = data.body.tracks[0].id;
+        $scope.currentSong = $sce.trustAsHtml('<iframe src="https://open.spotify.com/embed/track/'+data.body.tracks[0].id+'" width="500" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>');
       });
     })
   }
@@ -121,6 +127,7 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
   $scope.getMyRecent = function() {
     $http.get("/getMyRecent").then(function(data) {
       console.log(data.data.data.body.items[0].track.id);
+      $scope.currentSongId = data.data.data.body.items[0].track.id;
       $scope.currentSong = $sce.trustAsHtml('<iframe src="https://open.spotify.com/embed/track/'+data.data.data.body.items[0].track.id+'" width="500" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>');
     })
   }
