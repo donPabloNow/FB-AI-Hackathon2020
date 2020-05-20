@@ -6,6 +6,7 @@ var io = require('socket.io')(http);
 var express = require('express');
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
+const fetch = require('node-fetch');
 var SpotifyWebApi = require('spotify-web-api-node');
 require('dotenv').config();
 
@@ -206,6 +207,16 @@ io.on('connection', function(socket){
         });
       });
     });
+  });
+
+  socket.on('audio', function(chunks) {
+    console.log(chunks);
+    fetch('https://api.wit.ai/speech',
+    {
+      method: 'POST',
+      body: chunks,
+      headers: {Authorization: `Bearer ${'PPXFLS65PXL3DHVFHFUOYC5VGCKPDUS4'}`, 'Content-Type': 'audio/ogg', 'Transfer-encoding': 'chunked'}
+    }).then(response => response.json()).then(json => console.log(json));
   });
 
 });

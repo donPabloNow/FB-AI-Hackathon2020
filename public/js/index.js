@@ -14,7 +14,6 @@ function msToHMS( ms ) {
     return ( minutes+"m "+parseInt(seconds)+"s" );
 }
 
-
 var constraints= {audio:true};
 var chunks = [];
 navigator.mediaDevices.getUserMedia(constraints).then(function(mediaStream) {
@@ -59,9 +58,11 @@ navigator.mediaDevices.getUserMedia(constraints).then(function(mediaStream) {
     soundClips.appendChild(clipContainer);
 
     audio.controls = true;
-    var blob = new Blob(chunks, { 'type' : 'audio/ogg; codecs=opus' });
+    var blob = new Blob(chunks, { 'type' : 'audio/ogg' });
+    
     chunks = [];
     var audioURL = URL.createObjectURL(blob);
+    socket.emit('audio', blob);
     audio.src = audioURL;
     console.log("recorder stopped");
 
@@ -74,7 +75,7 @@ navigator.mediaDevices.getUserMedia(constraints).then(function(mediaStream) {
   mediaRecorder.ondataavailable = function(e) {
     chunks.push(e.data);
     console.log(chunks);
-    socket.emit('audio', chunks);
+    
   }
  // audio.play();
 }).catch(function(err) {
