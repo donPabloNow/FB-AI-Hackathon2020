@@ -29,7 +29,6 @@ io.on('connection', function(socket){
 
   socket.on('query', function(packet) {
     client.message(packet, {}).then((data) => {
-      console.log(data);
       socket.emit('query_response', data);
     })
   });

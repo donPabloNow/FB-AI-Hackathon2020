@@ -13,10 +13,8 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
   }
 
   $scope.query = function() {
-    console.log($scope.search);
     socket.emit('query', $scope.search);
     socket.on('query_response', function(data) {
-      console.log(data);
       $scope.$apply(function () {
         $scope.results = data;
       });
