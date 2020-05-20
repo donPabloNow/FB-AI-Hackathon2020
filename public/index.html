@@ -36,7 +36,7 @@
 						<a class="nav-link active" id="home" ng-click="view=0;changeActive('home')" href="#">Home</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" id="profile" ng-click="view=1;changeActive('profile');getStats()" href="#">Profile</a>
+						<a class="nav-link" id="profile" ng-click="changeActive('profile');getStats()" href="#">Profile</a>
 					</li>
 					<li class="nav-item dropdown">
 						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -79,6 +79,54 @@
 				</div>
 			</form>
 
+		</div>
+
+		<div class="stats-container" ng-if="userInfo">
+			<div class="most-played">
+				<h2 class="playlist-title stats">Most Played</h2>
+				<div class="container">
+					<div ng-repeat="song in top" class="row bars">
+						<div class="bar" ng-style="{{song[4]}}">
+							<div class="image-wrapper">
+								<img class="bar-img" ng-src={{song[5]}}>
+							</div>
+							<div class="info-wrapper">
+								<h3 class="bar-title"> {{song[0]}} </h3>
+								<h3 class="bar-sub"> {{song[1]}}</h3>
+							</div>
+							<div class="bar-end"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="fav-artists">
+				<h2 class="playlist-title stats bar-right">Favourite Artists</h2>
+				<div class="container">
+					<div ng-repeat="art in arts" class="row bars bars-right">
+						<div class="bar bar-right" ng-style="{{art[4]}}">
+							<div class="bar-end-left"></div>
+							<div class="info-wrapper">
+								<h3 class="bar-title bar-right"> {{art[0]}} </h3>
+								<h3 class="bar-sub bar-right"> {{art[1]}}</h3>
+							</div>
+							<div class="image-wrapper">
+								<img class="bar-img bar-right" ng-src={{art[5]}}>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="stats-container" ng-if="userInfo">
+			<div class="averages-container">
+				<h2 class="playlist-title stats analysis">Audio Analysis</h2>
+				<div class="container vert-bars">
+					<div class="vert-bar" ng-repeat="feature in features" ng-style="{{feature[0]}}">
+						{{feature[1]}}
+						<div class="bar-end-bottom"></div>
+					</div>
+				</div>
+			</div>
 		</div>
 
 	  </main>

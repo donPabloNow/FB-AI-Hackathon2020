@@ -11,3 +11,111 @@ nav{
 .bg-dark{
   background-color: #141414!important;
 }
+.stats{
+  color:white;
+}
+.bar{
+  background-color: #333333;
+  color: white;
+  height: 60px;
+  border: 1px solid black;
+}
+.bar-title{
+  margin-top: 6px;
+  font-size: 15px;
+  font-weight: 300;
+}
+.bar-sub{
+  font-size: 13px;
+  font-weight: 100;
+}
+.bar-img{
+  height:58px;
+  width: 58px;
+  vertical-align: text-bottom;
+}
+.bars{
+  height: 59px;
+}
+.image-wrapper{
+  display: inline-block;
+  height:58px;
+}
+.info-wrapper{
+  vertical-align: text-bottom;
+  display: inline-block;
+  height: 58px;
+}
+.most-played{
+  display: block;
+  width: 600px;
+  margin-right: 100px;
+  float: left;
+}
+.fav-artists{
+  display: block;
+  width: 600px;
+  float: right;
+}
+.stats-container{
+  width: 70%;
+  margin: 20px auto;
+}
+.stats-container::after{
+  clear: both;
+}
+.bar-right{
+  text-align: right;
+}
+.bars-right{
+  margin-left: 50%;
+  float: right;
+}
+.bar-end{
+  background-color: #2ebd59;
+  height: 58px;
+  width: 6px;
+  float: right;
+}
+.bar-end-left{
+  background-color: #2ebd59;
+  height: 58px;
+  width: 6px;
+  float: left;
+}
+.bar-end-bottom{
+  position: absolute;
+  bottom: 0px;
+  right: 0px;
+  background-color: #2ebd59;
+  width: 58px;
+  height: 6px;
+}
+.averages-container{
+  padding-top: 25px;
+  clear: both;
+  width: 100%;
+}
+.analysis{
+  text-align: center;
+}
+.vert-bar {
+  position: relative;
+  vertical-align: top;
+  display: inline-block;
+  background-color: #333333;
+  color: white;
+  width: 60px;
+  border: 1px solid black;
+  font-size: 1rem;
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  padding-top: 6px;
+  padding-right: 17px;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+}
+.vert-bars{
+  width: fit-content;
+}

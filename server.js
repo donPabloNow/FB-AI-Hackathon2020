@@ -18,6 +18,8 @@ const client = new Wit({
   logger: new log.Logger(log.DEBUG) // optional
 });
 
+var USERID;
+
 var spotifyApi = new SpotifyWebApi({
   clientId: process.env.CLIENT_ID,
   clientSecret: process.env.CLIENT_SECRET,
@@ -34,9 +36,6 @@ app.get('/callback', function(req, res){
   // get and set authorization code for this user
   spotifyApi.authorizationCodeGrant(req.query.code).then(
       function(data) {
-        console.log('The token expires in ' + data.body.expires_in);
-        console.log('The access token is ' + data.body.access_token);
-        console.log('The refresh token is ' + data.body.refresh_token);
         // Set the access token on the API object to use it in later calls
         spotifyApi.setAccessToken(data.body.access_token);
         spotifyApi.setRefreshToken(data.body.refresh_token);
@@ -57,7 +56,7 @@ app.get('/userInfo/', function(req, res){
   }, function(err) {
     return null;
   }).then( function(result){
-    USERID = result["id"];
+    if(result) USERID = result["id"];
     res.json( { user: result } );
   });
 });
@@ -69,6 +68,44 @@ app.get('/logout/', function(req, res){
   res.redirect('/');
 });
 
+//get statistics from user
+app.get('/stats', function(req, res) {
+  //no personalization endpoints in the npm
+  var out;
+  spotifyApi.getMyTopTracks().then(function(data) {
+    out = data;
+    spotifyApi.getMyTopArtists().then(function(arts) {
+     out.body.previous = arts.body.items;
+     res.json({data: out})
+    }, function(err) {
+      console.log('Something went wrong!', err);
+    });
+    //res.json({data: data})
+  }, function(err) {
+    console.log('Something went wrong!', err);
+  });
+})
+//get audio analysis for top tracks
+app.get('/stats/detailed', function(req, res) {
+  //no personalization endpoints in the npm
+  spotifyApi.getMyTopTracks().then(function(data) {;
+    var features = {0:"", 1:"", 2:"", 3:"", 4:""};
+    var call_cnt = 0;
+    for(var i = 0; i < 5; i++) {
+      spotifyApi.getAudioFeaturesForTrack(data.body.items[i].id).then(function(arts) {
+        features[call_cnt] = arts;
+        call_cnt++;
+        if(call_cnt == 5){
+          res.json({data:features});
+        }
+      }, function(err) {
+        console.log('Something went wrong!', err);
+      });
+    }
+  }, function(err) {
+    console.log('Something went wrong!', err);
+  });
+})
 
 app.use(express.static('public'));
 
