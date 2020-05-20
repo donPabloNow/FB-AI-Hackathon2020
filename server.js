@@ -125,10 +125,12 @@ var determine_change = function(changeData, feats) {
   var changeString = changeData.entities.intent[0].value;
   if(changeString === 'Instrumentalness_Up') {
     feats.body.instrumentalness=1;
+    feats.body.speechiness-=.33
     return feats;
   }
   if(changeString === 'Instrumentalness_Down') {
     feats.body.instrumentalness=0;
+    feats.body.speechiness+=.33
     return feats;
   }
  
@@ -170,19 +172,21 @@ var determine_change = function(changeData, feats) {
 
   if(changeString === 'Speechiness_Up') {
     feats.body.speechiness+=.33
+    feats.body.instrumentalness=0;
     return feats;
   }
   if(changeString === 'Speechiness_Down') {
     feats.body.speechiness-=.33
+    feats.body.instrumentalness=1;
     return feats;
   }
 
   if(changeString === 'Loudness_Up') {
-    feats.body.speechiness+=5
+    feats.body.loudness+=5
     return feats;
   }
   if(changeString === 'Loudness_Down') {
-    feats.body.speechiness-=5
+    feats.body.loudness-=5
     return feats;
   }
 }
