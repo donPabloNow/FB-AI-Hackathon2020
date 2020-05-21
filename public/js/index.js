@@ -135,9 +135,14 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
   }
   $scope.getMyRecent = function() {
     $http.get("/getMyRecent").then(function(data) {
-      var ind = randomIntFromInterval(0,data.data.data.body.items.length-1);
-      $scope.currentSongId = data.data.data.body.items[ind].track.id;
-      $scope.currentSong = $sce.trustAsHtml('<iframe src="https://open.spotify.com/embed/track/'+data.data.data.body.items[ind].track.id+'" width="500" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>');
+      if(data.data.data.body) {
+        var ind = randomIntFromInterval(0,data.data.data.body.items.length-1);
+        $scope.currentSongId = data.data.data.body.items[ind].track.id;
+        $scope.currentSong = $sce.trustAsHtml('<iframe src="https://open.spotify.com/embed/track/'+data.data.data.body.items[ind].track.id+'" width="500" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>');
+      } else {
+        $scope.currentSongId = data.data.data.id;
+        $scope.currentSong = $sce.trustAsHtml('<iframe src="https://open.spotify.com/embed/track/'+data.data.data.id+'" width="500" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>');
+      }
     })
   }
 
@@ -174,7 +179,6 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
 		}
     $scope.search = response.msg_body;
     $scope.query();
-		document.getElementById("result").innerHTML = response.msg_body;
 	};
 	mic.onerror = function (err) {
 		error("Error: " + err);

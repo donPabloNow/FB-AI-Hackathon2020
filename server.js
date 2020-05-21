@@ -119,6 +119,10 @@ app.get('/getMyRecent', async function(req, res) {
   await spotifyApi.play().catch(function(err) {console.log(err)});
   spotifyApi.getMyCurrentPlaybackState().then(function(resu) {
     console.log(resu);
+    if(resu.body.device) {
+      res.json({data: resu.body.item});
+      return;
+    }
   }).catch(function(err){
     console.log(err);
   });
