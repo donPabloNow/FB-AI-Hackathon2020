@@ -43,7 +43,7 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
       console.log(data);
       $scope.$apply(function () {
         var ind = 0;
-        $scope.currentSongId = data[0].body.tracks[ind].id;
+        $scope.currentSongId = data[0].id;
         $scope.features = [];
         $scope.features.push([data[1].body.danceability,'Danceability']);
         $scope.features.push([data[1].body.energy,'Energy']);
@@ -55,7 +55,7 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
         $scope.features.push([data[1].body.valence,'Valence']);
         $scope.features.push([data[1].body.tempo,'Tempo']);
 
-        $scope.currentSong = $sce.trustAsHtml('<iframe src="https://open.spotify.com/embed/track/'+data[0].body.tracks[ind].id+'" width="500" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>');
+        $scope.currentSong = $sce.trustAsHtml('<iframe src="https://open.spotify.com/embed/track/'+data[0].id+'" width="500" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>');
         console.log($scope.currentSongId);
       });
     })

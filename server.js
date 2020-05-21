@@ -29,7 +29,7 @@ var spotifyApi = new SpotifyWebApi({
   clientSecret: process.env.CLIENT_SECRET,
   redirectUri: 'http://localhost:3000/callback'
  });
-var scopes = ["user-read-private", "user-read-email","playlist-read-private", "playlist-modify-private", "playlist-modify-public","user-top-read","user-follow-read","user-read-recently-played","user-library-read"];
+var scopes = ["user-read-private", "user-read-email","playlist-read-private", "playlist-modify-private", "playlist-modify-public","user-top-read","user-follow-read","user-read-recently-played","user-library-read","user-modify-playback-state"];
 var authorizeURL = spotifyApi.createAuthorizeURL(scopes);
 app.get('/authUrl/', function(req, res){
   res.json({authUrl: authorizeURL});
@@ -209,23 +209,17 @@ io.on('connection', function(socket){
         }).then(function(recs) {
           let ind = randomIntFromInterval(0, recs.body.tracks.length-1);
           spotifyApi.getAudioFeaturesForTrack(recs.body.tracks[ind].id).then(async function(feats) {
-            socket.emit('query_response', [recs.body.tracks[ind], feats]); //search using curr id as seed and adjust audio features by query  results
+            spotifyApi.addToQueue(recs.body.tracks[ind].uri).then(function(res) {
+              console.log(res);
+              socket.emit('query_response', [recs.body.tracks[ind], feats]); //search using curr id as seed and adjust audio features by query  results
+            }).catch(function(err) {
+              console.log(err);
+            });
           });
         });
       });
     });
   });
-
-  socket.on('audio', function(blob) {
-    console.log(blob);
-    fetch('https://api.wit.ai/speech',
-    {
-      method: 'POST',
-      body: blob,
-      headers: {Authorization: `Bearer ${'PPXFLS65PXL3DHVFHFUOYC5VGCKPDUS4'}`, 'Content-Type': 'audio/ogg', 'Transfer-encoding': 'chunked'}
-    }).then(response => response.json()).then(json => console.log(json));
-  });
-
 });
 
 
