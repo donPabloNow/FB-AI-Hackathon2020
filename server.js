@@ -10,6 +10,10 @@ const fetch = require('node-fetch');
 var SpotifyWebApi = require('spotify-web-api-node');
 require('dotenv').config();
 
+function randomIntFromInterval(min, max) { // min and max included 
+  return Math.floor(Math.random() * (max - min + 1) + min);
+}
+
 const {Wit, log} = require('node-wit');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -203,7 +207,10 @@ io.on('connection', function(socket){
          target_tempo: feats.body.tempo, target_danceability: feats.body.danceability, target_energy: feats.body.energy, target_key: feats.body.key, target_instrumentalness: feats.body.instrumentalness,
          target_liveness: feats.body.liveness, target_acousticness: feats.body.acousticness, target_valence: feats.body.valence, target_loudness: feats.body.loudness, target_speechiness: feats.body.speechiness
         }).then(function(recs) {
-          socket.emit('query_response', [recs, feats]); //search using curr id as seed and adjust audio features by query  results
+          let ind = randomIntFromInterval(0, recs.body.tracks.length-1);
+          spotifyApi.getAudioFeaturesForTrack(recs.body.tracks[ind].id).then(async function(feats) {
+            socket.emit('query_response', [recs.body.tracks[ind], feats]); //search using curr id as seed and adjust audio features by query  results
+          });
         });
       });
     });

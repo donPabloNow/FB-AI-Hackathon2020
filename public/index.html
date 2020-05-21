@@ -66,16 +66,12 @@
     <div id="error"></div>
    
 		</div>
-		<div class="stats-container" ng-if="userInfo">
-			<div class="averages-container">
-				<h2 class="playlist-title stats analysis">Audio Analysis</h2>
-				<div class="container vert-bars">
-					<div class="vert-bar" ng-repeat="feature in features" ng-style="{{feature[0]}}">
-						{{feature[1]}}
-						<div class="bar-end-bottom"></div>
+		<div class="row" ng-if="userInfo">
+					<div class="col" ng-repeat="feature in features">
+						<h3>{{feature[1]}}</h3>
+						<p class="text-center">{{feature[0] | number : 2}}</p>
 					</div>
 				</div>
-			</div>
 		</div>
 
 	  </main>

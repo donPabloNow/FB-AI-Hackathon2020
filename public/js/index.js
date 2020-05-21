@@ -42,18 +42,18 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
     socket.on('query_response', function(data) {
       console.log(data);
       $scope.$apply(function () {
-        var ind = randomIntFromInterval(0,data[0].body.tracks.length-1);
+        var ind = 0;
         $scope.currentSongId = data[0].body.tracks[ind].id;
         $scope.features = [];
-        $scope.features.push(['{\'height\': \''+data[1].body.danceability*500+'px\'}','Danceability']);
-        $scope.features.push(['{\'height\': \''+data[1].body.energy*500+'px\'}','Energy']);
-        $scope.features.push(['{\'height\': \''+data[1].body.loudness*-8+'px\'}','Loudness']);
-        $scope.features.push(['{\'height\': \''+data[1].body.speechiness*500+'px\'}','Speechiness']);
-        $scope.features.push(['{\'height\': \''+data[1].body.acousticness*500+'px\'}','Acousticness']);
-        $scope.features.push(['{\'height\': \''+data[1].body.instrumentalness*500+'px\'}','Instrumentalness']);
-        $scope.features.push(['{\'height\': \''+data[1].body.liveness*500+'px\'}','Liveness']);
-        $scope.features.push(['{\'height\': \''+data[1].body.valence*500+'px\'}','Valence']);
-        $scope.features.push(['{\'height\': \''+data[1].body.tempo*2.4+'px\'}','Tempo']);
+        $scope.features.push([data[1].body.danceability,'Danceability']);
+        $scope.features.push([data[1].body.energy,'Energy']);
+        $scope.features.push([data[1].body.loudness,'Loudness']);
+        $scope.features.push([data[1].body.speechiness,'Speechiness']);
+        $scope.features.push([data[1].body.acousticness,'Acousticness']);
+        $scope.features.push([data[1].body.instrumentalness,'Instrumentalness']);
+        $scope.features.push([data[1].body.liveness,'Liveness']);
+        $scope.features.push([data[1].body.valence,'Valence']);
+        $scope.features.push([data[1].body.tempo,'Tempo']);
 
         $scope.currentSong = $sce.trustAsHtml('<iframe src="https://open.spotify.com/embed/track/'+data[0].body.tracks[ind].id+'" width="500" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>');
         console.log($scope.currentSongId);
@@ -128,15 +128,15 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
         }
       }
       console.log(averages);
-      $scope.features.push(['{\'height\': \''+averages[0]*700+'px\'}','Danceability']);
-      $scope.features.push(['{\'height\': \''+averages[1]*700+'px\'}','Energy']);
-      $scope.features.push(['{\'height\': \''+averages[3]*-70+'px\'}','Loudness']);
-      $scope.features.push(['{\'height\': \''+averages[5]*700+'px\'}','Speechiness']);
-      $scope.features.push(['{\'height\': \''+averages[6]*700+'px\'}','Acousticness']);
-      $scope.features.push(['{\'height\': \''+averages[7]*700+'px\'}','Instrumentalness']);
-      $scope.features.push(['{\'height\': \''+averages[8]*700+'px\'}','Liveness']);
-      $scope.features.push(['{\'height\': \''+averages[9]*700+'px\'}','Valence']);
-      $scope.features.push(['{\'height\': \''+averages[10]*4+'px\'}','Tempo']);
+      $scope.features.push([averages[0],'Danceability']);
+      $scope.features.push([averages[1],'Energy']);
+      $scope.features.push([averages[3],'Loudness']);
+      $scope.features.push([averages[5],'Speechiness']);
+      $scope.features.push([averages[6],'Acousticness']);
+      $scope.features.push([averages[7],'Instrumentalness']);
+      $scope.features.push([averages[8],'Liveness']);
+      $scope.features.push([averages[9],'Valence']);
+      $scope.features.push([averages[10],'Tempo']);
     })
   }
   $scope.getMyRecent = function() {
