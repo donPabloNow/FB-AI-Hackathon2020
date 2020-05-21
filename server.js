@@ -210,6 +210,7 @@ io.on('connection', function(socket){
           let ind = randomIntFromInterval(0, recs.body.tracks.length-1);
           spotifyApi.getAudioFeaturesForTrack(recs.body.tracks[ind].id).then(async function(feats) {
             spotifyApi.addToQueue(recs.body.tracks[ind].uri).then(function(res) {
+              spotifyApi.skipToNext().catch(function(err) {console.log(err)});
               console.log(res);
               socket.emit('query_response', [recs.body.tracks[ind], feats]); //search using curr id as seed and adjust audio features by query  results
             }).catch(function(err) {
