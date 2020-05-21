@@ -179,7 +179,9 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
 				}
 			}
 		}
-		console.log(response);
+    console.log(response);
+    $scope.search = response.msg_body;
+    $scope.query();
 		document.getElementById("result").innerHTML = response.msg_body;
 	};
 	mic.onerror = function (err) {
