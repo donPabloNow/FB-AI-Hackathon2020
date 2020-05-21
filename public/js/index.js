@@ -1,6 +1,8 @@
 var app = angular.module("myApp", []);
 var socket = io();
-
+function randomIntFromInterval(min, max) { // min and max included 
+  return Math.floor(Math.random() * (max - min + 1) + min);
+}
 // Convert ms to Hours/Minutes
 function msToHMS( ms ) {
   var seconds = ms / 1000; // 1- Convert to seconds
@@ -37,7 +39,7 @@ navigator.mediaDevices.getUserMedia(constraints).then(function(mediaStream) {
     record.style.color = "";
   }
 
-  mediaRecorder.onstop = function(e) {
+  mediaRecorder.onstop = async function(e) {
     console.log("data available after MediaRecorder.stop() called.");
 
     var clipName = prompt('Enter a name for your sound clip');
@@ -59,10 +61,12 @@ navigator.mediaDevices.getUserMedia(constraints).then(function(mediaStream) {
 
     audio.controls = true;
     var blob = new Blob(chunks, { 'type' : 'audio/ogg' });
+    socket.emit('audio', blob);
+    console.log(blob);
     
     chunks = [];
     var audioURL = URL.createObjectURL(blob);
-    socket.emit('audio', blob);
+    
     audio.src = audioURL;
     console.log("recorder stopped");
 
@@ -74,8 +78,6 @@ navigator.mediaDevices.getUserMedia(constraints).then(function(mediaStream) {
 
   mediaRecorder.ondataavailable = function(e) {
     chunks.push(e.data);
-    console.log(chunks);
-    
   }
  // audio.play();
 }).catch(function(err) {
@@ -108,7 +110,8 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
     socket.on('query_response', function(data) {
       console.log(data);
       $scope.$apply(function () {
-        $scope.currentSongId = data[0].body.tracks[0].id;
+        var ind = randomIntFromInterval(0,data[0].body.tracks.length-1);
+        $scope.currentSongId = data[0].body.tracks[ind].id;
         $scope.features = [];
         $scope.features.push(['{\'height\': \''+data[1].body.danceability*500+'px\'}','Danceability']);
         $scope.features.push(['{\'height\': \''+data[1].body.energy*500+'px\'}','Energy']);
@@ -120,7 +123,7 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
         $scope.features.push(['{\'height\': \''+data[1].body.valence*500+'px\'}','Valence']);
         $scope.features.push(['{\'height\': \''+data[1].body.tempo*2.4+'px\'}','Tempo']);
 
-        $scope.currentSong = $sce.trustAsHtml('<iframe src="https://open.spotify.com/embed/track/'+data[0].body.tracks[0].id+'" width="500" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>');
+        $scope.currentSong = $sce.trustAsHtml('<iframe src="https://open.spotify.com/embed/track/'+data[0].body.tracks[ind].id+'" width="500" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>');
         console.log($scope.currentSongId);
       });
     })
@@ -206,9 +209,10 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
   }
   $scope.getMyRecent = function() {
     $http.get("/getMyRecent").then(function(data) {
-      console.log(data.data.data.body.items[0].track.id);
-      $scope.currentSongId = data.data.data.body.items[0].track.id;
-      $scope.currentSong = $sce.trustAsHtml('<iframe src="https://open.spotify.com/embed/track/'+data.data.data.body.items[0].track.id+'" width="500" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>');
+      var ind = randomIntFromInterval(0,data.data.data.body.items.length-1);
+      console.log(data.data.data.body.items[ind].track.id);
+      $scope.currentSongId = data.data.data.body.items[ind].track.id;
+      $scope.currentSong = $sce.trustAsHtml('<iframe src="https://open.spotify.com/embed/track/'+data.data.data.body.items[ind].track.id+'" width="500" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>');
     })
   }
 }]);

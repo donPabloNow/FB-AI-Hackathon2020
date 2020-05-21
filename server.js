@@ -199,7 +199,7 @@ io.on('connection', function(socket){
         console.log(packet.id);
         if(data)
           feats = await determine_change(data, feats);
-        spotifyApi.getRecommendations({limit: 1, seed_tracks: [packet.id],
+        spotifyApi.getRecommendations({limit: 20, seed_tracks: [packet.id],
          target_tempo: feats.body.tempo, target_danceability: feats.body.danceability, target_energy: feats.body.energy, target_key: feats.body.key, target_instrumentalness: feats.body.instrumentalness,
          target_liveness: feats.body.liveness, target_acousticness: feats.body.acousticness, target_valence: feats.body.valence, target_loudness: feats.body.loudness, target_speechiness: feats.body.speechiness
         }).then(function(recs) {
@@ -209,18 +209,17 @@ io.on('connection', function(socket){
     });
   });
 
-  socket.on('audio', function(chunks) {
-    console.log(chunks);
+  socket.on('audio', function(blob) {
+    console.log(blob);
     fetch('https://api.wit.ai/speech',
     {
       method: 'POST',
-      body: chunks,
+      body: blob,
       headers: {Authorization: `Bearer ${'PPXFLS65PXL3DHVFHFUOYC5VGCKPDUS4'}`, 'Content-Type': 'audio/ogg', 'Transfer-encoding': 'chunked'}
     }).then(response => response.json()).then(json => console.log(json));
   });
 
 });
-
 
 
 http.listen(3000, function(){
