@@ -51,10 +51,6 @@
 				<div class="currently-playing" ng-bind-html="currentSong"></div>
 			  <h1 class="display-3 text-dark">{{results.entities.intent[0].value}}</h1>
 			</div>
-			<button id="record">Record</button>
-			<button id="stop">Stop</button>
-			<div id="soundClips"></div>
-			<audio ></audio>
 			<form name="searchForm" ng-submit="query()">
 				<div class="form-group">
 					<input class="form-control" type="text" ng-model="search" name="search" placeholder="what kind of song do you want next" required>
@@ -68,103 +64,8 @@
     <pre id="result"></pre>
     <div id="info"></div>
     <div id="error"></div>
-    <script src="microphone/js/microphone.min.js"></script>
-
-    <script>
-      var mic = new Wit.Microphone(document.getElementById("microphone"));
-      var info = function (msg) {
-        document.getElementById("info").innerHTML = msg;
-      };
-      var error = function (msg) {
-        document.getElementById("error").innerHTML = msg;
-      };
-      mic.onready = function () {
-        info("Microphone is ready to record");
-      };
-      mic.onaudiostart = function () {
-        info("Recording started");
-        error("");
-      };
-      mic.onaudioend = function () {
-        info("Recording stopped, processing started");
-      };
-      mic.onresult = function (intent, entities, response) {
-        var r = kv("intent", intent);
-
-        for (var k in entities) {
-          var e = entities[k];
-
-          if (!(e instanceof Array)) {
-            r += kv(k, e.value);
-          } else {
-            for (var i = 0; i < e.length; i++) {
-              r += kv(k, e[i].value);
-            }
-          }
-        }
-				console.log(response);
-        document.getElementById("result").innerHTML = response;
-      };
-      mic.onerror = function (err) {
-        error("Error: " + err);
-      };
-      mic.onconnecting = function () {
-        info("Microphone is connecting");
-      };
-      mic.ondisconnected = function () {
-        info("Microphone is not connected");
-      };
-
-      mic.connect("VF37BMDRZO74V4XNSGLDRCCR6LZS2MQD");
-      // mic.start();
-      // mic.stop();
-
-      function kv (k, v) {
-        if (toString.call(v) !== "[object String]") {
-          v = JSON.stringify(v);
-        }
-        return k + "=" + v + "\n";
-      }
-    </script>
-
+   
 		</div>
-
-	<!--<div class="stats-container" ng-if="userInfo">
-			<div class="most-played">
-				<h2 class="playlist-title stats">Most Played</h2>
-				<div class="container">
-					<div ng-repeat="song in top" class="row bars">
-						<div class="bar" ng-style="{{song[4]}}">
-							<div class="image-wrapper">
-								<img class="bar-img" ng-src={{song[5]}}>
-							</div>
-							<div class="info-wrapper">
-								<h3 class="bar-title"> {{song[0]}} </h3>
-								<h3 class="bar-sub"> {{song[1]}}</h3>
-							</div>
-							<div class="bar-end"></div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="fav-artists">
-				<h2 class="playlist-title stats bar-right">Favourite Artists</h2>
-				<div class="container">
-					<div ng-repeat="art in arts" class="row bars bars-right">
-						<div class="bar bar-right" ng-style="{{art[4]}}">
-							<div class="bar-end-left"></div>
-							<div class="info-wrapper">
-								<h3 class="bar-title bar-right"> {{art[0]}} </h3>
-								<h3 class="bar-sub bar-right"> {{art[1]}}</h3>
-							</div>
-							<div class="image-wrapper">
-								<img class="bar-img bar-right" ng-src={{art[5]}}>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>-->	
 		<div class="stats-container" ng-if="userInfo">
 			<div class="averages-container">
 				<h2 class="playlist-title stats analysis">Audio Analysis</h2>
@@ -181,4 +82,8 @@
 
 </body>
 <script src="js/index.js"></script>
+<script src="microphone/js/microphone.min.js"></script>
+<script>
+
+</script>
 </html>

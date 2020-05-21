@@ -16,74 +16,6 @@ function msToHMS( ms ) {
     return ( minutes+"m "+parseInt(seconds)+"s" );
 }
 
-var constraints= {audio:true};
-var chunks = [];
-navigator.mediaDevices.getUserMedia(constraints).then(function(mediaStream) {
-  var audio = document.querySelector('audio');
-  audio.srcObject = mediaStream;
-  var mediaRecorder = new MediaRecorder(mediaStream);
-
-  record.onclick = function() {
-    mediaRecorder.start();
-    console.log(mediaRecorder.state);
-    console.log("recorder started");
-    record.style.background = "red";
-    record.style.color = "black";
-  }
-  var stop = document.getElementById('stop');
-  stop.onclick = function() {
-    mediaRecorder.stop();
-    console.log(mediaRecorder.state);
-    console.log("recorder stopped");
-    record.style.background = "";
-    record.style.color = "";
-  }
-
-  mediaRecorder.onstop = async function(e) {
-    console.log("data available after MediaRecorder.stop() called.");
-
-    var clipName = prompt('Enter a name for your sound clip');
-
-    var clipContainer = document.createElement('article');
-    var clipLabel = document.createElement('p');
-    var audio = document.createElement('audio');
-    var deleteButton = document.createElement('button');
-   
-    clipContainer.classList.add('clip');
-    audio.setAttribute('controls', '');
-    deleteButton.innerHTML = "Delete";
-    clipLabel.innerHTML = clipName;
-
-    clipContainer.appendChild(audio);
-    clipContainer.appendChild(clipLabel);
-    clipContainer.appendChild(deleteButton);
-    soundClips.appendChild(clipContainer);
-
-    audio.controls = true;
-    var blob = new Blob(chunks, { 'type' : 'audio/ogg' });
-    socket.emit('audio', blob);
-    console.log(blob);
-    
-    chunks = [];
-    var audioURL = URL.createObjectURL(blob);
-    
-    audio.src = audioURL;
-    console.log("recorder stopped");
-
-    deleteButton.onclick = function(e) {
-      evtTgt = e.target;
-      evtTgt.parentNode.parentNode.removeChild(evtTgt.parentNode);
-    }
-  }
-
-  mediaRecorder.ondataavailable = function(e) {
-    chunks.push(e.data);
-  }
- // audio.play();
-}).catch(function(err) {
-  console.log(err.message);
-})
-
 app.controller("mainController", ['$scope','$http','$sce', function($scope, $http, $sce) {
   $scope.view = 0;
   $scope.currid = "home";
@@ -215,4 +147,58 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
       $scope.currentSong = $sce.trustAsHtml('<iframe src="https://open.spotify.com/embed/track/'+data.data.data.body.items[ind].track.id+'" width="500" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>');
     })
   }
+
+  var mic = new Wit.Microphone(document.getElementById("microphone"));
+	var info = function (msg) {
+		document.getElementById("info").innerHTML = msg;
+	};
+	var error = function (msg) {
+		document.getElementById("error").innerHTML = msg;
+	};
+	mic.onready = function () {
+		info("Microphone is ready to record");
+	};
+	mic.onaudiostart = function () {
+		info("Recording started");
+		error("");
+	};
+	mic.onaudioend = function () {
+		info("Recording stopped, processing started");
+	};
+	mic.onresult = function (intent, entities, response) {
+		var r = kv("intent", intent);
+
+		for (var k in entities) {
+			var e = entities[k];
+
+			if (!(e instanceof Array)) {
+				r += kv(k, e.value);
+			} else {
+				for (var i = 0; i < e.length; i++) {
+					r += kv(k, e[i].value);
+				}
+			}
+		}
+		console.log(response);
+		document.getElementById("result").innerHTML = response.msg_body;
+	};
+	mic.onerror = function (err) {
+		error("Error: " + err);
+	};
+	mic.onconnecting = function () {
+		info("Microphone is connecting");
+	};
+	mic.ondisconnected = function () {
+		info("Microphone is not connected");
+	};
+
+	mic.connect("VF37BMDRZO74V4XNSGLDRCCR6LZS2MQD");
+
+	function kv (k, v) {
+		if (toString.call(v) !== "[object String]") {
+			v = JSON.stringify(v);
+		}
+		return k + "=" + v + "\n";
+	}
+
 }]);
