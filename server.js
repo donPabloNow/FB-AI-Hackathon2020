@@ -29,7 +29,7 @@ var spotifyApi = new SpotifyWebApi({
   clientSecret: process.env.CLIENT_SECRET,
   redirectUri: 'http://localhost:3000/callback'
  });
-var scopes = ["user-read-private", "user-read-email","playlist-read-private", "playlist-modify-private", "playlist-modify-public","user-top-read","user-follow-read","user-read-recently-played","user-library-read","user-modify-playback-state"];
+var scopes = ["user-read-private", "user-read-email","playlist-read-private", "playlist-modify-private", "playlist-modify-public","user-top-read","user-follow-read","user-read-recently-played","user-library-read","user-modify-playback-state","user-read-playback-state"];
 var authorizeURL = spotifyApi.createAuthorizeURL(scopes);
 app.get('/authUrl/', function(req, res){
   res.json({authUrl: authorizeURL});
@@ -49,6 +49,8 @@ app.get('/callback', function(req, res){
       }
     ).then(function() {
       res.redirect('/');
+    }).catch(function(err){
+      console.log(err);
     });
 
 });
@@ -62,6 +64,8 @@ app.get('/userInfo/', function(req, res){
   }).then( function(result){
     if(result) USERID = result["id"];
     res.json( { user: result } );
+  }).catch(function(err){
+    console.log(err);
   });
 });
 
@@ -111,10 +115,18 @@ app.get('/stats/detailed', function(req, res) {
   });
 })
 
-app.get('/getMyRecent', function(req, res) {
+app.get('/getMyRecent', async function(req, res) {
+  await spotifyApi.play().catch(function(err) {console.log(err)});
+  spotifyApi.getMyCurrentPlaybackState().then(function(resu) {
+    console.log(resu);
+  }).catch(function(err){
+    console.log(err);
+  });
   spotifyApi.getMyRecentlyPlayedTracks().then(function(data) {
     res.json({data:data});
-  })
+  }).catch(function(err){
+    console.log(err);
+  });
 })
 app.use(express.static('public'));
 
@@ -211,7 +223,6 @@ io.on('connection', function(socket){
           spotifyApi.getAudioFeaturesForTrack(recs.body.tracks[ind].id).then(async function(feats) {
             spotifyApi.addToQueue(recs.body.tracks[ind].uri).then(function(res) {
               spotifyApi.skipToNext().catch(function(err) {console.log(err)});
-              console.log(res);
               socket.emit('query_response', [recs.body.tracks[ind], feats]); //search using curr id as seed and adjust audio features by query  results
             }).catch(function(err) {
               console.log(err);

@@ -37,10 +37,8 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
     var q =$scope.search;
     var id=$scope.currentSongId;
     var packet = {q, id};
-    console.log($scope.currentSongId);
     socket.emit('query', packet);
     socket.on('query_response', function(data) {
-      console.log(data);
       $scope.$apply(function () {
         var ind = 0;
         $scope.currentSongId = data[0].id;
@@ -56,7 +54,6 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
         $scope.features.push([data[1].body.tempo,'Tempo']);
 
         $scope.currentSong = $sce.trustAsHtml('<iframe src="https://open.spotify.com/embed/track/'+data[0].id+'" width="500" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>');
-        console.log($scope.currentSongId);
       });
     })
   }
@@ -71,7 +68,6 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
       return data.data.user;
     }).then( function(result){
       $scope.userInfo = result;
-      console.log(result);
     })
   }
   $scope.logout = function(){
@@ -82,7 +78,6 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
   // Get stats about user
   $scope.getStats = function() {
     $http.get("/stats").then(function(data) {
-      console.log(data);
       $scope.top = [];
       $scope.arts = [];
       entry = [];
@@ -127,7 +122,6 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
           feat_cnt++;
         }
       }
-      console.log(averages);
       $scope.features.push([averages[0],'Danceability']);
       $scope.features.push([averages[1],'Energy']);
       $scope.features.push([averages[3],'Loudness']);
@@ -142,7 +136,6 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
   $scope.getMyRecent = function() {
     $http.get("/getMyRecent").then(function(data) {
       var ind = randomIntFromInterval(0,data.data.data.body.items.length-1);
-      console.log(data.data.data.body.items[ind].track.id);
       $scope.currentSongId = data.data.data.body.items[ind].track.id;
       $scope.currentSong = $sce.trustAsHtml('<iframe src="https://open.spotify.com/embed/track/'+data.data.data.body.items[ind].track.id+'" width="500" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>');
     })
@@ -179,7 +172,6 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
 				}
 			}
 		}
-    console.log(response);
     $scope.search = response.msg_body;
     $scope.query();
 		document.getElementById("result").innerHTML = response.msg_body;
@@ -191,7 +183,8 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
 		info("Microphone is connecting");
 	};
 	mic.ondisconnected = function () {
-		info("Microphone is not connected");
+    info("Microphone is not connected");
+    mic.connect("VF37BMDRZO74V4XNSGLDRCCR6LZS2MQD");
 	};
 
 	mic.connect("VF37BMDRZO74V4XNSGLDRCCR6LZS2MQD");
