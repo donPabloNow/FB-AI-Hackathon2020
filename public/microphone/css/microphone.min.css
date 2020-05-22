@@ -32,7 +32,7 @@
   border-color: #61dbfb;
 }
 .mic-box {
-  border: 4px solid #b2b2b2;
+  border: 2px solid #616467;
   box-sizing: border-box;
   width: 100%;
   height: 100%;
@@ -44,9 +44,9 @@
   border-color: transparent;
 }
 .mic {
-  background: #fff;
+  background: black;
   border-radius: 100%;
-  color: #b2b2b2;
+  color: #616467;
   cursor: pointer;
   display: inline-block;
   font-size: 72px;
@@ -58,8 +58,11 @@
   -webkit-transition: border-color 0.5s, color 0.5s;
   transition: border-color 0.5s, color 0.5s;
 }
+path{
+  stroke: #61dbfb;
+}
 .mic-status {
-  color: #ccc;
+  color: #61dbfb;
   display: block;
   font-size: 32px;
   font-weight: 700;

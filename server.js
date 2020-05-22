@@ -212,7 +212,7 @@ io.on('connection', function(socket){
                 });
               });
             });
-          } else {
+          } else if(data.entities.intent[0].value == 'Search') {
             var types = ['track'];
             spotifyApi.search(data.entities.search_term[0].value, types).then(function(data) {
             //  console.log(data.body.tracks.items)
@@ -225,9 +225,11 @@ io.on('connection', function(socket){
                 }).catch(function(err){'Error adding search song to queue', err.statusCode});
               }).catch(function(err){'Error getting audio from searched track:', err.statusCode});
             }).catch(function(err){'Error resolving the search', err.statusCode});
+          } else {
+            console.log("Couldnt understand the request");
           }
         } else{
-          console.log("Couldnt understand the request")
+          console.log("Couldnt understand the request");
         }
       });
     });
