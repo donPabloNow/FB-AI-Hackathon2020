@@ -122,10 +122,22 @@ app.get('/getMyRecent', async function(req, res) {
     if(resu.body.device) {
       res.json({data: resu.body.item});
       return;
+    } else {
+      spotifyApi.getMyDevices().then(async function(data) {
+        if(data.body.devices) {
+          await spotifyApi.play({device_id: data.body.devices[0].id}).catch(function(err) {console.log(err)});
+          spotifyApi.getMyCurrentPlaybackState().then(function(resu) {
+            console.log(resu);
+            if(resu.body.device) {
+              res.json({data: resu.body.item});
+              return;
+            }
+          }).catch(function(err){console.log(err)});
+        }
+      }).catch(function(err){console.log(err);});
     }
-  }).catch(function(err){
-    console.log(err);
-  });
+  }).catch(function(err){console.log(err);});
+
   spotifyApi.getMyRecentlyPlayedTracks().then(function(data) {
     res.json({data:data});
   }).catch(function(err){
@@ -146,68 +158,68 @@ var determine_change = function(changeData, feats) {
   if(changeString === 'Instrumentalness_Up') {
     feats.body.instrumentalness=1;
     feats.body.speechiness-=.33
-    return feats;
+    return {target_speechiness: feats.body.speechiness, target_instrumentalness: feats.body.instrumentalness};
   }
   if(changeString === 'Instrumentalness_Down') {
     feats.body.instrumentalness=0;
     feats.body.speechiness+=.33
-    return feats;
+    return {target_speechiness: feats.body.speechiness, target_instrumentalness: feats.body.instrumentalness};
   }
  
   if(changeString === 'Valence_Up') {
     feats.body.valence+=.7;
-    return feats;
+    return {target_valence: feats.body.valence};
   }
   if(changeString === 'Valence_Down') {
     feats.body.valence-=.7;
-    return feats;
+    return {target_valence: feats.body.valence};
   }
 
   if(changeString === 'Tempo_Up') {
     feats.body.tempo+=30
-    return feats;
+    return {target_tempo: feats.body.tempo};
   }
   if(changeString === 'Tempo_Down') {
     feats.body.tempo-=30
-    return feats;
+    return {target_tempo: feats.body.tempo};
   }
 
   if(changeString === 'Energy_Up') {
     feats.body.energy+=.30
-    return feats;
+    return {target_energy: feats.body.energy};
   }
   if(changeString === 'Energy_Down') {
     feats.body.energy-=.30
-    return feats;
+    return {target_energy: feats.body.energy};
   }
 
   if(changeString === 'Danceability_Up') {
     feats.body.danceability+=.30
-    return feats;
+    return {target_danceability: feats.body.danceability};
   }
   if(changeString === 'Danceability_Down') {
     feats.body.danceability-=.30
-    return feats;
+    return {target_danceability: feats.body.danceability};
   }
 
   if(changeString === 'Speechiness_Up') {
     feats.body.speechiness+=.33
     feats.body.instrumentalness=0;
-    return feats;
+    return {target_speechiness: feats.body.speechiness, target_instrumentalness: feats.body.instrumentalness};
   }
   if(changeString === 'Speechiness_Down') {
     feats.body.speechiness-=.33
     feats.body.instrumentalness=1;
-    return feats;
+    return {target_speechiness: feats.body.speechiness, target_instrumentalness: feats.body.instrumentalness};
   }
 
   if(changeString === 'Loudness_Up') {
     feats.body.loudness+=5
-    return feats;
+    return {target_loudness: feats.body.loudness};
   }
   if(changeString === 'Loudness_Down') {
     feats.body.loudness-=5
-    return feats;
+    return {target_loudness: feats.body.loudness};
   }
 }
 
@@ -219,17 +231,14 @@ io.on('connection', function(socket){
         console.log(packet.id);
         if(data)
           feats = await determine_change(data, feats);
-        spotifyApi.getRecommendations({limit: 20, seed_tracks: [packet.id],
-         target_tempo: feats.body.tempo, target_danceability: feats.body.danceability, target_energy: feats.body.energy, target_key: feats.body.key, target_instrumentalness: feats.body.instrumentalness,
-         target_liveness: feats.body.liveness, target_acousticness: feats.body.acousticness, target_valence: feats.body.valence, target_loudness: feats.body.loudness, target_speechiness: feats.body.speechiness
-        }).then(function(recs) {
+        spotifyApi.getRecommendations({limit: 20, seed_tracks: [packet.id],feats}).then(function(recs) {
           let ind = randomIntFromInterval(0, recs.body.tracks.length-1);
           spotifyApi.getAudioFeaturesForTrack(recs.body.tracks[ind].id).then(async function(feats) {
             spotifyApi.addToQueue(recs.body.tracks[ind].uri).then(function(res) {
               spotifyApi.skipToNext().catch(function(err) {console.log(err)});
               socket.emit('query_response', [recs.body.tracks[ind], feats]); //search using curr id as seed and adjust audio features by query  results
             }).catch(function(err) {
-              console.log(err);
+              console.log("Error adding song to queue: ", err);
             });
           });
         });
