@@ -27,7 +27,7 @@ var USERID;
 var spotifyApi = new SpotifyWebApi({
   clientId: process.env.CLIENT_ID,
   clientSecret: process.env.CLIENT_SECRET,
-  redirectUri: 'http://localhost:3000/callback'
+  redirectUri: process.env.CALLBACK_URI
  });
 var scopes = ["user-read-private", "user-read-email","playlist-read-private", "playlist-modify-private", "playlist-modify-public","user-top-read","user-follow-read","user-read-recently-played","user-library-read","user-modify-playback-state","user-read-playback-state"];
 var authorizeURL = spotifyApi.createAuthorizeURL(scopes);
