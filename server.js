@@ -5,7 +5,7 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var express = require('express');
 var bodyParser = require('body-parser');
-var SpotifyWebApi = require('spotify-web-api-node');
+var SpotifyWebApi = require('./spotify-web-api-node');
 require('dotenv').config();
 const PORT = process.env.PORT || 3000
 const SECRET_TOKEN = process.env.SECRET_TOKEN;
@@ -86,7 +86,7 @@ app.get('/getMyRecent', async function(req, res) {
         console.log(data.body.devices);
         if(data.body.devices) {
           await spotifyApi.play({device_id: data.body.devices[0].id}).catch(function(err) {console.log('Error setting playback to play: ', err.statusCode)});
-          spotifyApi.MyCurrentPlaybackState().then(function(resu) {
+          spotifyApi.getMyCurrentPlaybackState().then(function(resu) {
             if(resu.body.device) {
               res.json({data: resu.body.item});
             }
