@@ -27,12 +27,16 @@ nav{
 }
 .btn-outline-success{
   color: #61DBFB;
-  border-color: #61DBFB;
+  border: 0px;
 }
 .btn-outline-success:hover {
-  background-color: #61DBFB;
-  border-color: #61DBFB;
-  color: black;
+  color: white;
+  background-color: transparent;
+}
+.btn-outline-success:focus, .btn-outline-success:active, .btn-outline-success:focus:active{
+  box-shadow: 0 0 0 0!important;
+  background-color: transparent !important;
+  border: 0px;
 }
 .form-control{
   max-width: 500px;
