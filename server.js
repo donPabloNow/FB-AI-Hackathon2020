@@ -117,34 +117,37 @@ app.get('/stats/detailed', function(req, res) {
 
 app.get('/getMyRecent', async function(req, res) {
   await spotifyApi.play().catch(function(err) {console.log(err)});
-  spotifyApi.getMyCurrentPlaybackState().then(function(resu) {
+  await spotifyApi.getMyCurrentPlaybackState().then(function(resu) {
     console.log(resu);
     if(resu.body.device) {
       res.json({data: resu.body.item});
-      return;
     } else {
       spotifyApi.getMyDevices().then(async function(data) {
         if(data.body.devices) {
           await spotifyApi.play({device_id: data.body.devices[0].id}).catch(function(err) {console.log(err)});
-          spotifyApi.getMyCurrentPlaybackState().then(function(resu) {
+          spotifyApi.getMyCurrentlyPlayingTrack().then(function(resu) {
             console.log(resu);
             if(resu.body.device) {
               res.json({data: resu.body.item});
-              return;
             }
           }).catch(function(err){console.log(err)});
         }
       }).catch(function(err){console.log(err);});
     }
-  }).catch(function(err){console.log(err);});
-
-  spotifyApi.getMyRecentlyPlayedTracks().then(function(data) {
-    res.json({data:data});
-  }).catch(function(err){
-    console.log(err);
+  }).catch(function(er){
+    spotifyApi.getMyRecentlyPlayedTracks().then(function(data) {
+      res.json({data:data});
+    }).catch(function(err){
+      console.log(err);
+    });
+    console.log("No player open, Choosing seed from recently played", er);
   });
-})
+});
 app.use(express.static('public'));
+
+app.get('/currentlyPlaying', function(req, res) {
+  
+})
 
 app.get('/', function(req, res){
     res.sendFile('/index.html');
