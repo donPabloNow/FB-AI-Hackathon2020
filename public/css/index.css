@@ -18,6 +18,7 @@ nav{
 }
 .jumbotron{
   border-radius: 0px;
+  height: calc(100vh - 176px);
 }
 .bg-dark{
   background-color: #000!important;
