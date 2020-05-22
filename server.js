@@ -91,15 +91,15 @@ app.get('/getMyRecent', async function(req, res) {
             }
           }).catch(function(err){console.log('Error getting current playback state: ',err.statusCode)});
         }
-      }).catch(function(err){console.log('Error getting current devices: ', err);});
+      }).catch(function(err){console.log('Error getting current devices: ', err.statusCode);});
     }
   }).catch(function(er){
     spotifyApi.getMyRecentlyPlayedTracks().then(function(data) {
       res.json({data:data});
     }).catch(function(err){
-      console.log(err);
+      console.log('Error getting recently played tracks', err.statusCode);
     });
-    console.log("No player open, Choosing seed from recently played", er);
+    console.log('Error getting currently playing: ', er.statusCode);
   });
 });
 app.use(express.static('public'));
@@ -107,7 +107,7 @@ app.use(express.static('public'));
 app.get('/currentlyPlaying', function(req, res) {
   spotifyApi.getMyCurrentPlayingTrack().then(function(data) {
     res.json({data:data})
-  }).catch(function(err){});
+  }).catch(function(err){console.log('Error getting current song: ', err.statusCode)});
 })
 
 app.get('/', function(req, res){
@@ -199,10 +199,10 @@ io.on('connection', function(socket){
           let ind = randomIntFromInterval(0, recs.body.tracks.length-1);
           spotifyApi.getAudioFeaturesForTrack(recs.body.tracks[ind].id).then(async function(feats) {
             spotifyApi.addToQueue(recs.body.tracks[ind].uri).then(function(res) {
-              spotifyApi.skipToNext().catch(function(err) {console.log(err)});
+              spotifyApi.skipToNext().catch(function(err) {console.log('Error skipping song: ', err)});
               socket.emit('query_response', [recs.body.tracks[ind], feats]); //search using curr id as seed and adjust audio features by query  results
             }).catch(function(err) {
-              console.log("Error adding song to queue: ", err);
+              console.log('Error adding song to queue: ', err.statusCode);
             });
           });
         });
