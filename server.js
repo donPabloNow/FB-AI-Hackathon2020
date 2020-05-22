@@ -106,7 +106,9 @@ app.use(express.static('public'));
 
 app.get('/currentlyPlaying', function(req, res) {
   spotifyApi.getMyCurrentPlayingTrack().then(function(data) {
-    res.json({data:data})
+    spotifyApi.getAudioFeaturesForTrack(data.body.item.id).then(function(feats) {
+      res.json({data:data, feats: feats});
+    }).catch(function(err) {console.log('Error getting audio features for current song: ', err.statusCode)})
   }).catch(function(err){console.log('Error getting current song: ', err.statusCode)});
 })
 
