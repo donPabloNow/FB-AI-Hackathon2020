@@ -78,5 +78,6 @@ h2{
   flex-grow: 0;
 }
 h3{
+  font-weight: 400;
   font-size: 22px;
 }
