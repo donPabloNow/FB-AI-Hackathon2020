@@ -2,28 +2,37 @@ html {
   font-family: 'Merriweather', serif;
 }
 body {
+  font-weight: 100;
   color: white;
 }
 nav{
   color: white;
   box-shadow: 0 2px 4px rgba(0,0,0,.08);
+  padding: 0 10px;
+  min-height: 70px;
+  width: 100%;
 }
 .theme{
-  background-image: linear-gradient(-225deg, #22E1FF 0%, #1D8FE1 48%, #22E1FF 100%);
+  border-top: 1px solid #616467;
+  background-color: #0f0f0f
+}
+.jumbotron{
+  border-radius: 0px;
 }
 .bg-dark{
-  background-color: #141414!important;
+  background-color: #000!important;
 }
 .stats{
   color:white;
 }
 .btn-outline-success{
-  color: #22E1FF;
-  border-color: #22E1FF;
+  color: #61DBFB;
+  border-color: #61DBFB;
 }
 .btn-outline-success:hover {
-  background-image: linear-gradient(-225deg, #22E1FF 0%, #1D8FE1 48%, #22E1FF 100%);
-  border-color: #22E1FF;
+  background-color: #61DBFB;
+  border-color: #61DBFB;
+  color: black;
 }
 .form-control{
   max-width: 500px;
@@ -40,6 +49,11 @@ nav{
 }
 .wit-microphone{
   margin: 0 auto;
+  margin-top: 75px;
+  cursor: pointer;
+}
+.wit-microphone:hover{
+  border-color: #61DBFB;
 }
 #info{
   text-align: center;
@@ -53,6 +67,7 @@ h2{
 }
 .row{
   justify-content: center;
+  margin: 0;
 }
 .col{
   width: fit-content;

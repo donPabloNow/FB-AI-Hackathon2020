@@ -107,22 +107,6 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
   }
 
   var mic = new Wit.Microphone(document.getElementById("microphone"));
-	var info = function (msg) {
-		document.getElementById("info").innerHTML = msg;
-	};
-	var error = function (msg) {
-		document.getElementById("error").innerHTML = msg;
-	};
-	mic.onready = function () {
-		info("Microphone is ready to record");
-	};
-	mic.onaudiostart = function () {
-		info("Recording started");
-		error("");
-	};
-	mic.onaudioend = function () {
-		info("Recording stopped, processing started");
-	};
 	mic.onresult = function (intent, entities, response) {
 		var r = kv("intent", intent);
 
@@ -140,14 +124,7 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
     $scope.search = response.msg_body;
     $scope.query();
 	};
-	mic.onerror = function (err) {
-		error("Error: " + err);
-	};
-	mic.onconnecting = function () {
-		info("Microphone is connecting");
-	};
 	mic.ondisconnected = function () {
-    info("Microphone is not connected");
     mic.connect("VF37BMDRZO74V4XNSGLDRCCR6LZS2MQD");
 	};
 

@@ -83,15 +83,16 @@ app.get('/getMyRecent', async function(req, res) {
       res.json({data: resu.body.item});
     } else {
       spotifyApi.getMyDevices().then(async function(data) {
+        console.log(data.body.devices);
         if(data.body.devices) {
           await spotifyApi.play({device_id: data.body.devices[0].id}).catch(function(err) {console.log('Error setting playback to play: ', err.statusCode)});
           spotifyApi.MyCurrentPlaybackState().then(function(resu) {
             if(resu.body.device) {
               res.json({data: resu.body.item});
             }
-          }).catch(function(err){console.log('Error getting current playback state: ',err.statusCode)});
+          }).catch(function(err){console.log('Error getting current playback state: ',err)});
         }
-      }).catch(function(err){console.log('Error getting current devices: ', err.statusCode);});
+      }).catch(function(err){console.log('Error getting current devices: ', err);});
     }
   }).catch(function(er){
     spotifyApi.getMyRecentlyPlayedTracks().then(function(data) {
@@ -214,7 +215,7 @@ io.on('connection', function(socket){
           } else {
             var types = ['track'];
             spotifyApi.search(data.entities.search_term[0].value, types).then(function(data) {
-              
+            //  console.log(data.body.tracks.items)
               let ind = randomIntFromInterval(0, data.body.tracks.items.length-1);
               let id = data.body.tracks.items[ind].id;
               spotifyApi.getAudioFeaturesForTrack(id).then(function(test) {
