@@ -24,8 +24,8 @@
   font-family: "Lucida Grande", Verdana, Tahoma, Helvetica, Arial, sans-serif;
   text-align: center;
   position: relative;
-  height: 120px;
-  width: 120px;
+  height: 150px;
+  width: 150px;
 }
 .wit-microphone.active .mic {
   color: #61dbfb;
@@ -49,8 +49,8 @@
   color: #616467;
   cursor: pointer;
   display: inline-block;
-  font-size: 72px;
-  line-height: 120px;
+  font-size: 80px;
+  line-height: 150px;
   width: 100%;
   height: 100%;
   -moz-transition: border-color 0.5s, color 0.5s;
