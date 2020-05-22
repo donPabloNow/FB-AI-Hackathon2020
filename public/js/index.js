@@ -60,8 +60,7 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
   $scope.login = function(){
     $http.get("/authUrl/").then(function(data) {
       window.location = data.data.authUrl;
-    })
-    $scope.getStats();
+    });
   }
   $scope.user = function(){
     $http.get("/userInfo/").then(function(data) {
@@ -81,67 +80,9 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
         $scope.currentSongId = data.data.data.body.item.id;
         $scope.currentSong = $sce.trustAsHtml('<iframe src="https://open.spotify.com/embed/track/'+data.data.data.body.item.id+'" width="500" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>');
       });
-    }, 1000);
+    }, 2000);
   }
-
-  // Get stats about user
-  $scope.getStats = function() {
-    $http.get("/stats").then(function(data) {
-      $scope.top = [];
-      $scope.arts = [];
-      entry = [];
-      for(var i = 0; i < 5;i++) {
-        var obj = data.data.data.body.items;
-        entry = [];
-        entry.push(obj[i].name);
-        entry.push(obj[i].artists[0].name);
-        entry.push(obj[i].album.name);
-        entry.push(msToHMS(obj[i].duration_ms));
-        entry.push('{\'width\': \''+obj[i].popularity*6+'px\'}');
-        if(obj[i].album.images.length >=2)
-          entry.push(obj[i].album.images[2].url);
-        else
-          entry.push('noimage.png');
-        $scope.top.push(entry);
-        var arts = data.data.data.body.previous;
-        entry = [];
-        entry.push(arts[i].name);
-        entry.push(arts[i].genres[0]);
-        entry.push(arts[i].followers.total);
-        entry.push(arts[i].popularity);
-        entry.push('{\'width\': \''+arts[i].popularity*6+'px\'}');
-        if(arts[i].images.length >=2)
-          entry.push(arts[i].images[2].url);
-        else
-          entry.push('noimage.png');
-        $scope.arts.push(entry);
-      }
-    })
-    $http.get("/stats/detailed").then(function(data) {
-      $scope.features= [];
-      //dance,energy,key,loudness,mode,speechy,acousticy,intrumentaly,live,valence,tempo
-      var averages = [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0];
-      var feat_cnt = 0;
-      for(var i = 0; i < 5; i++) {
-        feat_cnt = 0;
-        var x = data.data.data[i].body;
-        for(feat in x){
-          if(feat_cnt <= 10)
-            averages[feat_cnt] += (x[feat]/5);
-          feat_cnt++;
-        }
-      }
-      $scope.features.push([averages[0],'Danceability']);
-      $scope.features.push([averages[1],'Energy']);
-      $scope.features.push([averages[3],'Loudness']);
-      $scope.features.push([averages[5],'Speechiness']);
-      $scope.features.push([averages[6],'Acousticness']);
-      $scope.features.push([averages[7],'Instrumentalness']);
-      $scope.features.push([averages[8],'Liveness']);
-      $scope.features.push([averages[9],'Valence']);
-      $scope.features.push([averages[10],'Tempo']);
-    })
-  }
+  
   $scope.getMyRecent = function() {
     $http.get("/getMyRecent").then(function(data) {
       if(data.data.data.body) {

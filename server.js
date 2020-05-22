@@ -45,12 +45,12 @@ app.get('/callback', function(req, res){
         spotifyApi.setRefreshToken(data.body.refresh_token);
       },
       function(err) {
-        console.log('Something went wrong!', err);
+        console.log('Error granting auth code: ', err.statusCode);
       }
     ).then(function() {
       res.redirect('/');
     }).catch(function(err){
-      console.log(err);
+      console.log('error in callback function: ', err.statusCode);
     });
 
 });
@@ -65,7 +65,7 @@ app.get('/userInfo/', function(req, res){
     if(result) USERID = result["id"];
     res.json( { user: result } );
   }).catch(function(err){
-    console.log(err);
+    console.log("error getting userInfo: ",err.statusCode);
   });
 });
 
@@ -76,63 +76,22 @@ app.get('/logout/', function(req, res){
   res.redirect('/');
 });
 
-//get statistics from user
-app.get('/stats', function(req, res) {
-  //no personalization endpoints in the npm
-  var out;
-  spotifyApi.getMyTopTracks().then(function(data) {
-    out = data;
-    spotifyApi.getMyTopArtists().then(function(arts) {
-     out.body.previous = arts.body.items;
-     res.json({data: out})
-    }, function(err) {
-      console.log('Something went wrong!', err);
-    });
-    //res.json({data: data})
-  }, function(err) {
-    console.log('Something went wrong!', err);
-  });
-})
-//get audio analysis for top tracks
-app.get('/stats/detailed', function(req, res) {
-  //no personalization endpoints in the npm
-  spotifyApi.getMyTopTracks().then(function(data) {;
-    var features = {0:"", 1:"", 2:"", 3:"", 4:""};
-    var call_cnt = 0;
-    for(var i = 0; i < 5; i++) {
-      spotifyApi.getAudioFeaturesForTrack(data.body.items[i].id).then(function(arts) {
-        features[call_cnt] = arts;
-        call_cnt++;
-        if(call_cnt == 5){
-          res.json({data:features});
-        }
-      }, function(err) {
-        console.log('Something went wrong!', err);
-      });
-    }
-  }, function(err) {
-    console.log('Something went wrong!', err);
-  });
-})
-
 app.get('/getMyRecent', async function(req, res) {
-  await spotifyApi.play().catch(function(err) {console.log(err)});
+  await spotifyApi.play().catch(function(err) {console.log('Error setting playback to play: ', err.statusCode)});
   await spotifyApi.getMyCurrentPlaybackState().then(function(resu) {
-    console.log(resu);
     if(resu.body.device) {
       res.json({data: resu.body.item});
     } else {
       spotifyApi.getMyDevices().then(async function(data) {
         if(data.body.devices) {
-          await spotifyApi.play({device_id: data.body.devices[0].id}).catch(function(err) {console.log(err)});
+          await spotifyApi.play({device_id: data.body.devices[0].id}).catch(function(err) {console.log('Error setting playback to play: ', err.statusCode)});
           spotifyApi.MyCurrentPlaybackState().then(function(resu) {
-            console.log(resu);
             if(resu.body.device) {
               res.json({data: resu.body.item});
             }
-          }).catch(function(err){console.log(err)});
+          }).catch(function(err){console.log('Error getting current playback state: ',err.statusCode)});
         }
-      }).catch(function(err){console.log(err);});
+      }).catch(function(err){console.log('Error getting current devices: ', err);});
     }
   }).catch(function(er){
     spotifyApi.getMyRecentlyPlayedTracks().then(function(data) {
@@ -235,8 +194,8 @@ io.on('connection', function(socket){
       spotifyApi.getAudioFeaturesForTrack(packet.id).then(async function(feats) {
         console.log(packet.id);
         if(data)
-          feats = await determine_change(data, feats);
-        spotifyApi.getRecommendations({limit: 20, seed_tracks: [packet.id],feats}).then(function(recs) {
+          targets = await determine_change(data, feats);
+        spotifyApi.getRecommendations({limit: 20, seed_tracks: [packet.id], targets}).then(function(recs) {
           let ind = randomIntFromInterval(0, recs.body.tracks.length-1);
           spotifyApi.getAudioFeaturesForTrack(recs.body.tracks[ind].id).then(async function(feats) {
             spotifyApi.addToQueue(recs.body.tracks[ind].uri).then(function(res) {
