@@ -9,6 +9,8 @@ var bodyParser = require('body-parser');
 const fetch = require('node-fetch');
 var SpotifyWebApi = require('spotify-web-api-node');
 require('dotenv').config();
+const PORT = process.env.PORT || 3000
+const SECRET_TOKEN = process.env.SECRET_TOKEN;
 
 function randomIntFromInterval(min, max) { // min and max included 
   return Math.floor(Math.random() * (max - min + 1) + min);
@@ -239,6 +241,6 @@ io.on('connection', function(socket){
 });
 
 
-http.listen(3000, function(){
+http.listen(PORT, function(){
     console.log('\nServer up on *:3000');
   });
