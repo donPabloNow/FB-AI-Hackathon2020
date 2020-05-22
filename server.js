@@ -4,9 +4,7 @@ var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var express = require('express');
-var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
-const fetch = require('node-fetch');
 var SpotifyWebApi = require('spotify-web-api-node');
 require('dotenv').config();
 const PORT = process.env.PORT || 3000
@@ -21,7 +19,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 const client = new Wit({
-  accessToken: 'PPXFLS65PXL3DHVFHFUOYC5VGCKPDUS4',
+  accessToken: SECRET_TOKEN,
 });
 
 var USERID;
