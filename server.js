@@ -197,8 +197,8 @@ io.on('connection', function(socket){
         console.log(packet.id);
         var targets = {};
         if(data) {
-          console.log(data);
-          if(data.entities.intent[0].value != 'Search' && data.entities.intent!='Pause') {
+          console.log(data.entities);
+          if(data.entities.intent && data.entities.intent[0].value != 'Search' && data.entities.intent!='Pause') {
             targets = await determine_change(data, feats);
             spotifyApi.getRecommendations({limit: 20, seed_tracks: [packet.id], targets}).then(function(recs) {
               let ind = randomIntFromInterval(0, recs.body.tracks.length-1);
@@ -211,10 +211,18 @@ io.on('connection', function(socket){
                 });
               });
             });
-          } else{
-            var types = ['album','playlist','track','artist'];
+          } else {
+            var types = ['track'];
             spotifyApi.search(data.entities.search_term[0].value, types).then(function(data) {
-              console.log(data);
+              
+              let ind = randomIntFromInterval(0, data.body.tracks.items.length-1);
+              let id = data.body.tracks.items[ind].id;
+              spotifyApi.getAudioFeaturesForTrack(id).then(function(test) {
+                spotifyApi.addToQueue(data.body.tracks.items[ind].uri).then(function(res) {
+                  spotifyApi.skipToNext().catch(function(err) {console.log('Error skipping song: ', err)});
+                  socket.emit('query_response', [data.body.tracks.items[ind], test]);
+                }).catch(function(err){'Error adding search song to queue', err.statusCode});
+              }).catch(function(err){'Error getting audio from searched track:', err.statusCode});
             }).catch(function(err){'Error resolving the search', err.statusCode});
           }
         } else{
