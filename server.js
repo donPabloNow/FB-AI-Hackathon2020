@@ -195,22 +195,36 @@ io.on('connection', function(socket){
     client.message(packet.q, {}).then((data) => {
       spotifyApi.getAudioFeaturesForTrack(packet.id).then(async function(feats) {
         console.log(packet.id);
-        if(data)
-          targets = await determine_change(data, feats);
-        spotifyApi.getRecommendations({limit: 20, seed_tracks: [packet.id], targets}).then(function(recs) {
-          let ind = randomIntFromInterval(0, recs.body.tracks.length-1);
-          spotifyApi.getAudioFeaturesForTrack(recs.body.tracks[ind].id).then(async function(feats) {
-            spotifyApi.addToQueue(recs.body.tracks[ind].uri).then(function(res) {
-              spotifyApi.skipToNext().catch(function(err) {console.log('Error skipping song: ', err)});
-              socket.emit('query_response', [recs.body.tracks[ind], feats]); //search using curr id as seed and adjust audio features by query  results
-            }).catch(function(err) {
-              console.log('Error adding song to queue: ', err.statusCode);
+        var targets = {};
+        if(data) {
+          console.log(data);
+          if(data.entities.intent[0].value != 'Search' && data.entities.intent!='Pause') {
+            targets = await determine_change(data, feats);
+            spotifyApi.getRecommendations({limit: 20, seed_tracks: [packet.id], targets}).then(function(recs) {
+              let ind = randomIntFromInterval(0, recs.body.tracks.length-1);
+              spotifyApi.getAudioFeaturesForTrack(recs.body.tracks[ind].id).then(async function(feats) {
+                spotifyApi.addToQueue(recs.body.tracks[ind].uri).then(function(res) {
+                  spotifyApi.skipToNext().catch(function(err) {console.log('Error skipping song: ', err)});
+                  socket.emit('query_response', [recs.body.tracks[ind], feats]); //search using curr id as seed and adjust audio features by query  results
+                }).catch(function(err) {
+                  console.log('Error adding song to queue: ', err.statusCode);
+                });
+              });
             });
-          });
-        });
+          } else{
+            var types = ['album','playlist','track','artist'];
+            spotifyApi.search(data.entities.search_term[0].value, types).then(function(data) {
+              console.log(data);
+            }).catch(function(err){'Error resolving the search', err.statusCode});
+          }
+        } else{
+          console.log("Couldnt understand the request")
+        }
       });
     });
   });
+
+
 });
 
 
