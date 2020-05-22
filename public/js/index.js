@@ -75,6 +75,15 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
     $scope.user();
   }
 
+  $scope.checkCurrent = function(){
+    setInterval(() => {
+      $http.get("/currentlyPlaying/").then(function(data) {
+        $scope.currentSongId = data.data.data.body.item.id;
+        $scope.currentSong = $sce.trustAsHtml('<iframe src="https://open.spotify.com/embed/track/'+data.data.data.body.item.id+'" width="500" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>');
+      });
+    }, 1000);
+  }
+
   // Get stats about user
   $scope.getStats = function() {
     $http.get("/stats").then(function(data) {

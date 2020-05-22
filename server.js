@@ -125,7 +125,7 @@ app.get('/getMyRecent', async function(req, res) {
       spotifyApi.getMyDevices().then(async function(data) {
         if(data.body.devices) {
           await spotifyApi.play({device_id: data.body.devices[0].id}).catch(function(err) {console.log(err)});
-          spotifyApi.getMyCurrentlyPlayingTrack().then(function(resu) {
+          spotifyApi.MyCurrentPlaybackState().then(function(resu) {
             console.log(resu);
             if(resu.body.device) {
               res.json({data: resu.body.item});
@@ -146,7 +146,9 @@ app.get('/getMyRecent', async function(req, res) {
 app.use(express.static('public'));
 
 app.get('/currentlyPlaying', function(req, res) {
-  
+  spotifyApi.getMyCurrentPlayingTrack().then(function(data) {
+    res.json({data:data})
+  }).catch(function(err){});
 })
 
 app.get('/', function(req, res){
