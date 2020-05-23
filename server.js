@@ -18,7 +18,7 @@ function randomIntFromInterval(min, max) { // min and max included
 const {Wit, log} = require('node-wit');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(enforce.HTTPS());
+//app.use(enforce.HTTPS());
 
 const client = new Wit({
   accessToken: SECRET_TOKEN,
