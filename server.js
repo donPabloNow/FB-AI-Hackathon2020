@@ -34,6 +34,9 @@ var spotifyApi = new SpotifyWebApi({
   clientSecret: process.env.CLIENT_SECRET,
   redirectUri: process.env.CALLBACK_URI
  });
+ spotifyApi.resetAccessToken();
+ spotifyApi.resetRefreshToken();
+ spotifyApi.resetCode();
 var scopes = ["user-read-private", "user-read-email","playlist-read-private", "playlist-modify-private", "playlist-modify-public","user-top-read","user-follow-read","user-read-recently-played","user-library-read","user-modify-playback-state","user-read-playback-state"];
 var authorizeURL = spotifyApi.createAuthorizeURL(scopes);
 app.get('/authUrl/', function(req, res){
