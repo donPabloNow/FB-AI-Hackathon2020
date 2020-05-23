@@ -82,3 +82,8 @@ h3{
   font-weight: 400;
   font-size: 22px;
 }
+@media (max-width: 800px) {
+  body{
+    font-size: 36px;
+  }
+}
