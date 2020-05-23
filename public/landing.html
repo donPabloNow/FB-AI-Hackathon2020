@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+	<title>Flux</title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+	<link href="https://fonts.googleapis.com/css?family=Merriweather&display=swap" rel="stylesheet">
+	<meta charset="utf-8">
+	<!-- Angular, bootstrap, jquery, fonts, and style -->
+	
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.0.4/popper.js"></script>
+	<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+	
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.0/angular.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/2.0.2/anime.min.js"></script>
+	<link href="https://fonts.googleapis.com/css?family=Poppins&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Montserrat:300,400&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Montserrat:800&display=swap" rel="stylesheet">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" href="microphone/css/microphone.min.css">
+	<link rel="stylesheet" type="text/css" href="css/index.css"/>
+
+	<link rel="icon" type="image/png" sizes="16x16" href="favicon.ico">
+</head>
+<body ng-controller="mainController" class="bg-dark">
+	<!-- Navigation bar -->
+		<nav class="navbar navbar-expand-lg navbar-dark text-light bg-dark">
+			<a class="navbar-brand" href="#">LANDING</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+		
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<ul class="navbar-nav mr-auto">
+				</ul>
+				<form class="form-inline my-2 my-lg-0" ng-if="!userInfo" ng-submit="login()">
+					<input class="btn btn-outline-success my-2 my-sm-0" type="submit" value="Login">
+				</form>
+				<span class="pr-2" ng-if="userInfo">Welcome {{userInfo.display_name}} </span>
+				<form class="form-inline my-2 my-lg-0" ng-if="userInfo" ng-submit="logout()">
+					<input class="btn btn-outline-success my-2 my-sm-0" type="submit" value="Logout">
+				</form>
+			</div>
+		</nav>
+
+	  </main>
+</body>
+<script src="microphone/js/microphone.min.js"></script>
+<script src="js/index.js"></script>
+<script>
+
+</script>
+</html>

@@ -4,6 +4,7 @@ var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var express = require('express');
+var path = require('path');
 var bodyParser = require('body-parser');
 var sslRedirect = require('heroku-ssl-redirect');
 var SpotifyWebApi = require('./spotify-web-api-node');
@@ -50,7 +51,7 @@ app.get('/callback', function(req, res){
         console.log('Error granting auth code: ', err.statusCode);
       }
     ).then(function() {
-      res.redirect('/');
+      res.redirect('/radio');
     }).catch(function(err){
       console.log('error in callback function: ', err.statusCode);
     });
@@ -106,6 +107,12 @@ app.get('/getMyRecent', async function(req, res) {
   });
 });
 app.use(express.static('public'));
+app.get('/', function(req, res) {
+  res.sendFile(path.join(__dirname + '/public/landing.html'));
+});
+app.get('/radio', function(req, res) {
+  res.sendFile(path.join(__dirname + '/public/radio.html'));
+});
 
 app.get('/currentlyPlaying', function(req, res) {
   spotifyApi.getMyCurrentPlayingTrack().then(function(data) {
@@ -114,12 +121,6 @@ app.get('/currentlyPlaying', function(req, res) {
     }).catch(function(err) {console.log('Error getting audio features for current song: ', err.statusCode)})
   }).catch(function(err){console.log('Error getting current song: ', err.statusCode)});
 })
-
-app.get('/', function(req, res){
-    res.sendFile('/index.html');
-});
-
-app.use(express.static('public'));
 
 var determine_change = function(changeData, feats) {
   console.log(changeData.entities);

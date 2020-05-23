@@ -108,10 +108,14 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
 
   var mic = new Wit.Microphone(document.getElementById("microphone"));
   var info = function (msg) {
-    document.getElementById("info").innerHTML = msg;
+    if(document.getElementById("info")){
+      document.getElementById("info").innerHTML = msg;
+    }
   };
   var error = function (msg) {
-    document.getElementById("error").innerHTML = msg;
+    if(document.getElementById("error")){
+      document.getElementById("error").innerHTML = msg;
+    }
   };
   mic.onready = function () {
     info("Microphone is ready to record");
@@ -160,3 +164,5 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
     return k + "=" + v + "\n";
   }
 }]);
+
+
