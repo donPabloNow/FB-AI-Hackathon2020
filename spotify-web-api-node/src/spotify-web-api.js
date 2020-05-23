@@ -85,6 +85,10 @@ SpotifyWebApi.prototype = {
     this._resetCredential('redirectUri');
   },
 
+  resetCode: function() {
+    this._resetCredential('Code');
+  },
+
   _setCredential: function(credentialKey, value) {
     this._credentials = this._credentials || {};
     this._credentials[credentialKey] = value;

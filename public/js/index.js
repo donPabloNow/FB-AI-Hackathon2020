@@ -70,8 +70,11 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
     })
   }
   $scope.logout = function(){
-    $http.get("/logout/");
-    $scope.user();
+    console.log('logclick')
+    socket.emit('logout');
+    socket.on('resp', function(url){
+      window.location=url;
+    })
   }
 
   $scope.checkCurrent = function(){

@@ -25,6 +25,8 @@ const client = new Wit({
   accessToken: SECRET_TOKEN,
 });
 
+app.use(express.static('public'));
+
 var USERID;
 
 var spotifyApi = new SpotifyWebApi({
@@ -72,13 +74,6 @@ app.get('/userInfo/', function(req, res){
   });
 });
 
-// Logout
-app.get('/logout/', function(req, res){
-  spotifyApi.resetAccessToken();
-  spotifyApi.resetRefreshToken();
-  res.redirect('/');
-});
-
 app.get('/getMyRecent', async function(req, res) {
   await spotifyApi.play().catch(function(err) {console.log('Error setting playback to play: ', err.statusCode)});
   await spotifyApi.getMyCurrentPlaybackState().then(function(resu) {
@@ -106,7 +101,7 @@ app.get('/getMyRecent', async function(req, res) {
     console.log('Error getting currently playing: ', er.statusCode);
   });
 });
-app.use(express.static('public'));
+
 app.get('/', function(req, res) {
   res.sendFile(path.join(__dirname + '/public/landing.html'));
 });
@@ -236,6 +231,17 @@ io.on('connection', function(socket){
         }
       });
     });
+  });
+
+  socket.on('logout', function() {
+    spotifyApi.resetAccessToken();
+    spotifyApi.resetRefreshToken();
+    spotifyApi.resetCode();
+    console.log(spotifyApi.getCredentials());
+    if(PORT == 3000)
+      socket.emit('resp', 'http://localhost:3000');
+    else
+      socket.emit('https://fluxdj.herokuapp.com');
   });
 
 
