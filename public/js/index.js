@@ -1,4 +1,3 @@
-
 var app = angular.module("myApp", []);
 var socket = io();
 function randomIntFromInterval(min, max) { // min and max included 

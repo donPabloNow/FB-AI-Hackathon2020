@@ -5,7 +5,7 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var express = require('express');
 var bodyParser = require('body-parser');
-var enforce = require('express-sslify');
+var sslRedirect = require('heroku-ssl-redirect');
 var SpotifyWebApi = require('./spotify-web-api-node');
 require('dotenv').config();
 const PORT = process.env.PORT || 3000
@@ -18,7 +18,7 @@ function randomIntFromInterval(min, max) { // min and max included
 const {Wit, log} = require('node-wit');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-//app.use(enforce.HTTPS());
+app.use(sslRedirect());
 
 const client = new Wit({
   accessToken: SECRET_TOKEN,
