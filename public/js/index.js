@@ -60,6 +60,7 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
   $scope.login = function(){
     $http.get("/authUrl/").then(function(data) {
       window.location = data.data.authUrl;
+      $scope.user();
     });
   }
   $scope.user = function(){
