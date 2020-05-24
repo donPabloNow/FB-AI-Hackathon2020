@@ -195,6 +195,9 @@ var determine_change = function(changeData, feats) {
     feats.body.loudness-=5
     return {target_loudness: feats.body.loudness};
   }
+  if(changeString === 'Skip') {
+    return {};
+  }
 }
 
 io.on('connection', function(socket){ 
@@ -208,7 +211,7 @@ io.on('connection', function(socket){
           console.log(data.entities);
           if(data.entities.intent && data.entities.intent[0].value != 'Search' && data.entities.intent[0].value !='Pause' && data.entities.intent[0].value != 'Play') {
             targets = await determine_change(data, feats);
-            spotifyApi.getRecommendations({limit: 20, seed_tracks: [packet.id], targets}).then(function(recs) {
+            spotifyApi.getRecommendations({limit: 50, seed_tracks: [packet.id], targets}).then(function(recs) {
               let ind = randomIntFromInterval(0, recs.body.tracks.length-1);
               spotifyApi.getAudioFeaturesForTrack(recs.body.tracks[ind].id).then(async function(feats) {
                 spotifyApi.addToQueue(recs.body.tracks[ind].uri).then(function(res) {
