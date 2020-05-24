@@ -206,7 +206,7 @@ io.on('connection', function(socket){
         var targets = {};
         if(data) {
           console.log(data.entities);
-          if(data.entities.intent && data.entities.intent[0].value != 'Search' && data.entities.intent!='Pause') {
+          if(data.entities.intent && data.entities.intent[0].value != 'Search' && data.entities.intent[0].value !='Pause' && data.entities.intent[0].value != 'Play') {
             targets = await determine_change(data, feats);
             spotifyApi.getRecommendations({limit: 20, seed_tracks: [packet.id], targets}).then(function(recs) {
               let ind = randomIntFromInterval(0, recs.body.tracks.length-1);
@@ -232,6 +232,10 @@ io.on('connection', function(socket){
                 }).catch(function(err){'Error adding search song to queue', err.statusCode});
               }).catch(function(err){'Error getting audio from searched track:', err.statusCode});
             }).catch(function(err){'Error resolving the search', err.statusCode});
+          } else if(data.entities.intent[0].value == 'Pause'){
+            spotifyApi.pause(); 
+          }else if(data.entities.intent[0].value == 'Play'){
+            spotifyApi.play();
           } else {
             console.log("Couldnt understand the request");
           }
