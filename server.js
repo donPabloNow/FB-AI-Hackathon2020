@@ -33,12 +33,14 @@ var spotifyApi = new SpotifyWebApi({
   clientId: process.env.CLIENT_ID,
   clientSecret: process.env.CLIENT_SECRET,
   redirectUri: process.env.CALLBACK_URI
- });
- spotifyApi.resetAccessToken();
- spotifyApi.resetRefreshToken();
- spotifyApi.resetCode();
+});
+spotifyApi.setAccessToken(null);
+spotifyApi.setRefreshToken(null);
+spotifyApi.resetCode();
+console.log(spotifyApi.getCredentials());
 var scopes = ["user-read-private", "user-read-email","playlist-read-private", "playlist-modify-private", "playlist-modify-public","user-top-read","user-follow-read","user-read-recently-played","user-library-read","user-modify-playback-state","user-read-playback-state"];
 var authorizeURL = spotifyApi.createAuthorizeURL(scopes);
+
 app.get('/authUrl/', function(req, res){
   res.json({authUrl: authorizeURL});
 });
@@ -56,7 +58,7 @@ app.get('/callback', function(req, res){
         console.log('Error granting auth code: ', err.statusCode);
       }
     ).then(function() {
-      res.redirect('/radio');
+      res.redirect('/radio?token='+spotifyApi.getAccessToken());
     }).catch(function(err){
       console.log('error in callback function: ', err.statusCode);
     });
@@ -65,6 +67,8 @@ app.get('/callback', function(req, res){
 
 // Returns JSON data about user
 app.get('/userInfo/', function(req, res){
+  console.log(authorizeURL);
+  console.log(spotifyApi.getCredentials());
   spotifyApi.getMe().then(function(data) {
     return data.body;
   }, function(err) {
@@ -109,6 +113,8 @@ app.get('/', function(req, res) {
   res.sendFile(path.join(__dirname + '/public/landing.html'));
 });
 app.get('/radio', function(req, res) {
+  if(req.query.token !== spotifyApi.getAccessToken())
+    res.redirect('/');
   res.sendFile(path.join(__dirname + '/public/radio.html'));
 });
 
