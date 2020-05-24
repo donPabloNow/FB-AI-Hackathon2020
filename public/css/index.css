@@ -24,11 +24,15 @@ nav{
   background-color: #0f0f0f
 }
 .jumbotron{
+  padding: 0!important;
   border-radius: 0px;
   height: calc(100vh - 176px);
 }
 .bg-dark{
   background-color: #000!important;
+}
+.container{
+  margin-top: calc(30vh - 140px);
 }
 .stats{
   color:white;
