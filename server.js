@@ -258,7 +258,7 @@ io.on('connection', function(socket){
     if(PORT == 3000)
       socket.emit('resp', 'http://localhost:3000');
     else
-      socket.emit('https://fluxdj.herokuapp.com');
+      socket.emit('resp', 'https://fluxdj.herokuapp.com');
   });
 
 
