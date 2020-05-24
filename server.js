@@ -85,14 +85,17 @@ app.get('/getMyRecent', async function(req, res) {
       res.json({data: resu.body.item});
     } else {
       spotifyApi.getMyDevices().then(async function(data) {
-        console.log(data.body.devices);
-        if(data.body.devices) {
+        console.log(data.body.devices); //if this is a empty array we need to tell the user to turn on a spotify player
+        if(data.body.devices.length) {
           await spotifyApi.play({device_id: data.body.devices[0].id}).catch(function(err) {console.log('Error setting playback to play: ', err.statusCode)});
           spotifyApi.getMyCurrentPlaybackState().then(function(resu) {
             if(resu.body.device) {
               res.json({data: resu.body.item});
             }
           }).catch(function(err){console.log('Error getting current playback state: ',err)});
+        } else {
+          let data = 'x';
+          res.json({data: data});
         }
       }).catch(function(err){console.log('Error getting current devices: ', err);});
     }
@@ -225,8 +228,10 @@ io.on('connection', function(socket){
             });
           } else if(data.entities.intent[0].value == 'Search') {
             var types = ['track'];
-            spotifyApi.search(data.entities.search_term[0].value, types).then(function(data) {
-            //  console.log(data.body.tracks.items)
+            var q = data.entities.search_term[0].value.replace(/ /g,"+");
+            console.log(q);
+            spotifyApi.search(q, types).then(function(data) {
+             // console.log(data.body.tracks.items)
               let ind = randomIntFromInterval(0, data.body.tracks.items.length-1);
               let id = data.body.tracks.items[ind].id;
               spotifyApi.getAudioFeaturesForTrack(id).then(function(test) {

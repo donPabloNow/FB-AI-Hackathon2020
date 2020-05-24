@@ -107,15 +107,18 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
   }
   $scope.getMyRecent = function() {
     $http.get("/getMyRecent").then(function(data) {
+      console.log(data.data.data);
       if(data.data.data.body) {
         var ind = randomIntFromInterval(0,data.data.data.body.items.length-1);
         $scope.currentSongId = data.data.data.body.items[ind].track.id;
         $scope.initialId = $scope.currentSongId;
         $scope.currentSong = $sce.trustAsHtml('<iframe src="https://open.spotify.com/embed/track/'+data.data.data.body.items[ind].track.id+'" width="500" height="'+ih+'" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>');
-      } else {
+      } else if(data.data.data !== 'x') {
         $scope.currentSongId = data.data.data.id;
         $scope.initialId = $scope.currentSongId;
         $scope.currentSong = $sce.trustAsHtml('<iframe src="https://open.spotify.com/embed/track/'+data.data.data.id+'" width="500" height="'+ih+'" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>');
+      } else {
+        $scope.currentSong =  $sce.trustAsHtml('<p class="text-center">No device found! Open a Spotify player on any device and refresh this page!</p>')
       }
     })
   }
