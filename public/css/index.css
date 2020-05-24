@@ -85,6 +85,42 @@ h3{
 #result{
   display: none;
 }
+#landing-title{
+  font-family: 'Audiowide', cursive;
+  font-size: 110px;
+  position: absolute;
+  top: 130px;
+  left: 10vw;
+  color: #61DBFB;
+}
+#land-login{
+  position: absolute;
+  bottom:100px;
+  right: 100px;
+}
+.separator {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+}
+.separator::before {
+  position: absolute;
+  content: "";
+  width: 100%;
+  height: 100%;
+  background-color: black;
+  clip-path: polygon(100% 0, 0 0, 0 100%);
+}
+
+.separator::after {
+  position: absolute;
+  content: "";
+  width: 100%;
+  height: 100%;
+  background-color: #61DBFB;
+  clip-path: polygon(70% 0%, 36% 100%, 100000000% 100%)
+}
+
 @media (hover: none) {
   nav{
     min-height: 140px;

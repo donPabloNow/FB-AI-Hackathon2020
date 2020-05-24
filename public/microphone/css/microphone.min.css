@@ -67,7 +67,7 @@ path{
   font-size: 32px;
   font-weight: 700;
 }
-@media (max-width: 800px) {
+@media (hover: none) {
   .wit-microphone{
     height: 300px;
     width: 300px;
