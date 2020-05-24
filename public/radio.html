@@ -22,6 +22,14 @@
 	<link rel="icon" type="image/png" sizes="16x16" href="favicon.ico">
 </head>
 <body ng-controller="mainController" class="bg-dark" ng-init="user();getMyRecent();checkCurrent()">
+	<div class="demo plain">
+		<section class="radio-launch">
+			<header></header>
+			<div class="radio-open"></div>
+			<footer></footer>
+		</section>
+	</div>
+	<div class="cont">
 	<!-- Navigation bar -->
 		<nav class="navbar navbar-expand-lg navbar-dark text-light bg-dark">
 			<a class="navbar-brand" href="#">Flux</a>
@@ -34,37 +42,37 @@
 				</form>
 		</nav>
 
-	  <!-- Home page  -->
-	  <main role="main" ng-show="view==0">
-		<div class="jumbotron theme over slide">
-		  <div class="container">
-				<div class="currently-playing" ng-bind-html="currentSong"></div>
-			  <h1 class="display-3 text-dark">{{results.entities.intent[0].value}}</h1>
-			</div>
-			<form name="searchForm" ng-submit="query()">
-				<div class="form-group">
-					<input class="form-control" type="text" ng-model="search" name="search" placeholder="what kind of song do you want next" required>
-				</div>
-				<div class="form-group">
-					<input class="hidden btn btn-primary" type="submit" value="search">
-				</div>
-			</form>
-
-		<div id="microphone"></div>
-    <pre id="result"></pre>
-    <div id="info"></div>
-    <div id="error"></div>
-   
-		</div>
-		<div class="row" ng-if="userInfo">
-					<div class="col" ng-repeat="feature in features">
-						<h3>{{feature[1]}}</h3>
-						<p class="text-center">{{feature[0] | number : 2}}</p>
+			<!-- Home page  -->
+			<main role="main" ng-show="view==0">
+				<div class="jumbotron theme over slide">
+					<div class="container">
+						<div class="currently-playing" ng-bind-html="currentSong"></div>
+						<h1 class="display-3 text-dark">{{results.entities.intent[0].value}}</h1>
 					</div>
-				</div>
-		</div>
+					<form name="searchForm" ng-submit="query()">
+						<div class="form-group">
+							<input class="form-control" type="text" ng-model="search" name="search" placeholder="what kind of song do you want next" required>
+						</div>
+						<div class="form-group">
+							<input class="hidden btn btn-primary" type="submit" value="search">
+						</div>
+					</form>
 
-	  </main>
+				<div id="microphone"></div>
+				<pre id="result"></pre>
+				<div id="info"></div>
+				<div id="error"></div>
+			
+				</div>
+				<div class="row" ng-if="userInfo">
+							<div class="col" ng-repeat="feature in features">
+								<h3>{{feature[1]}}</h3>
+								<p class="text-center">{{feature[0] | number : 2}}</p>
+							</div>
+						</div>
+				</div>
+		</main>
+	</div>	
 
 </body>
 <script src="microphone/js/microphone.min.js"></script>

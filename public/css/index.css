@@ -139,6 +139,45 @@ h3{
   animation-fill-mode: forwards;
   animation-play-state: running;
 }
+
+.radio-open {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+}
+.radio-open::before {
+  z-index: 100;
+  position: absolute;
+  content: "";
+  width: 100%;
+  height: 100%;
+  background-color: black;
+  clip-path: polygon(0% 100%, 0% 0%, 70% 0%, 36% 100%);
+  animation: reveal-left 1s ease-out .4s 1;
+  animation-fill-mode: forwards;
+  animation-play-state: running;
+}
+
+.radio-open::after {
+  z-index: 10;
+  position: absolute;
+  content: "";
+  width: 100%;
+  height: 100%;
+  background-color: #61DBFB;
+  clip-path: polygon(0% 0%, -34% 100%, 100000000% 100%);
+  animation: reveal 1s ease-out .1s 1;
+  animation-fill-mode: forwards;
+  animation-play-state: running;
+}
+.cont{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+}
+
 @keyframes startup{
   from{
 
@@ -153,6 +192,22 @@ h3{
   }
   to {
     opacity: 100%;
+  }
+}
+@keyframes reveal {
+  from{
+
+  }
+  to {
+    clip-path: polygon(134% 0%, 100% 100%, 100000000% 100%);
+  }
+}
+@keyframes reveal-left {
+  from{
+
+  }
+  to {
+    clip-path: polygon(0% 100%, 0% 0%, 0% 0%, -34% 100%);
   }
 }
 @media (hover: none) {
