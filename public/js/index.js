@@ -33,6 +33,7 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
   $scope.userInfo;
   $scope.currentSong;
   $scope.currentSongId;
+  $scope.initialId;
   $scope.changeActive = function(id) {
     document.getElementById($scope.currid).className = 'nav-link'; 
     document.getElementById(id).className = 'nav-link active';
@@ -84,31 +85,36 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
 
   $scope.checkCurrent = function(){
     setInterval(() => {
-      $http.get("/currentlyPlaying/").then(function(data) {
-        $scope.currentSongId = data.data.data.body.item.id;
-        $scope.currentSong = $sce.trustAsHtml('<iframe src="https://open.spotify.com/embed/track/'+data.data.data.body.item.id+'" width="500" height="'+ih+'" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>');
-        $scope.features = {};
-        $scope.features[0] = ([data.data.feats.body.danceability,'Danceability']);
-        $scope.features[1] = ([data.data.feats.body.energy,'Energy']);
-        $scope.features[2] = ([data.data.feats.body.loudness,'Loudness']);
-        $scope.features[3] = ([data.data.feats.body.speechiness,'Speechiness']);
-        $scope.features[4] = ([data.data.feats.body.acousticness,'Acousticness']);
-        $scope.features[5] = ([data.data.feats.body.instrumentalness,'Instrumentalness']);
-        $scope.features[6] = ([data.data.feats.body.liveness,'Liveness']);
-        $scope.features[7] = ([data.data.feats.body.valence,'Valence']);
-        $scope.features[8] = ([data.data.feats.body.tempo,'Tempo']);
+      var id = $scope.currentSongId;
+      id == $scope.initialId ? id = null : id; 
+      $http.get("/currentlyPlaying?id="+id).then(function(data) {
+        if(data.data.data) {
+          $scope.currentSongId = data.data.data.body.item.id;
+          $scope.currentSong = $sce.trustAsHtml('<iframe src="https://open.spotify.com/embed/track/'+data.data.data.body.item.id+'" width="500" height="'+ih+'" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>');
+          $scope.features = {};
+          $scope.features[0] = ([data.data.feats.body.danceability,'Danceability']);
+          $scope.features[1] = ([data.data.feats.body.energy,'Energy']);
+          $scope.features[2] = ([data.data.feats.body.loudness,'Loudness']);
+          $scope.features[3] = ([data.data.feats.body.speechiness,'Speechiness']);
+          $scope.features[4] = ([data.data.feats.body.acousticness,'Acousticness']);
+          $scope.features[5] = ([data.data.feats.body.instrumentalness,'Instrumentalness']);
+          $scope.features[6] = ([data.data.feats.body.liveness,'Liveness']);
+          $scope.features[7] = ([data.data.feats.body.valence,'Valence']);
+          $scope.features[8] = ([data.data.feats.body.tempo,'Tempo']);
+        }
       });
-    }, 2000);
+    }, 10000);
   }
-
   $scope.getMyRecent = function() {
     $http.get("/getMyRecent").then(function(data) {
       if(data.data.data.body) {
         var ind = randomIntFromInterval(0,data.data.data.body.items.length-1);
         $scope.currentSongId = data.data.data.body.items[ind].track.id;
+        $scope.initialId = $scope.currentSongId;
         $scope.currentSong = $sce.trustAsHtml('<iframe src="https://open.spotify.com/embed/track/'+data.data.data.body.items[ind].track.id+'" width="500" height="'+ih+'" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>');
       } else {
         $scope.currentSongId = data.data.data.id;
+        $scope.initialId = $scope.currentSongId;
         $scope.currentSong = $sce.trustAsHtml('<iframe src="https://open.spotify.com/embed/track/'+data.data.data.id+'" width="500" height="'+ih+'" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>');
       }
     })

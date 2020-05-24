@@ -117,9 +117,13 @@ app.get('/radio', function(req, res) {
 
 app.get('/currentlyPlaying', function(req, res) {
   spotifyApi.getMyCurrentPlayingTrack().then(function(data) {
-    spotifyApi.getAudioFeaturesForTrack(data.body.item.id).then(function(feats) {
-      res.json({data:data, feats: feats});
-    }).catch(function(err) {console.log('Error getting audio features for current song: ', err.statusCode)})
+    if(req.query.id != data.body.item.id){
+      spotifyApi.getAudioFeaturesForTrack(data.body.item.id).then(function(feats) {
+        res.json({data:data, feats: feats});
+      }).catch(function(err) {console.log('Error getting audio features for current song: ', err.statusCode)})
+    } else {
+      res.json({data:null});
+    }
   }).catch(function(err){console.log('Error getting current song: ', err.statusCode)});
 })
 
