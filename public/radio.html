@@ -2,7 +2,9 @@
 <html lang="en" ng-app="myApp">
 	<title>Flux</title>
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+	<link href="https://fonts.googleapis.com/css2?family=Audiowide&display=swap" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css?family=Merriweather&display=swap" rel="stylesheet">
+	
 	<meta charset="utf-8">
 	<!-- Angular, bootstrap, jquery, fonts, and style -->
 	
@@ -32,11 +34,11 @@
 	<div class="cont">
 	<!-- Navigation bar -->
 		<nav class="navbar navbar-expand-lg navbar-dark text-light bg-dark">
-			<a class="navbar-brand" href="#">Flux</a>
+			<a class="navbar-brand" href="https://fluxdj.herokuapp.com/">Flux</a>
 		
 				<ul class="navbar-nav mr-auto">
 				</ul>
-				<span class="pr-2" ng-if="userInfo">Welcome {{userInfo.display_name}} </span>
+				<span class="pr-2 welcome" ng-if="userInfo">Welcome {{userInfo.display_name}} </span>
 				<form class="form-inline my-2 my-lg-0" ng-if="userInfo" ng-submit="logout()">
 					<input class="btn btn-outline-success my-2 my-sm-0" type="submit" value="Logout">
 				</form>

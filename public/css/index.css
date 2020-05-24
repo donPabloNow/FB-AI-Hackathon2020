@@ -6,11 +6,18 @@ body {
   color: white;
 }
 nav{
+  font-family: 'Audiowide', cursive;
   color: white;
   box-shadow: 0 2px 4px rgba(0,0,0,.08);
   padding: 0px 30px!important;
   min-height: 70px;
   width: 100%;
+}
+.navbar-brand{
+  font-size: 37px;
+}
+.welcome{
+  font-family: 'Poppins', sans-serif;
 }
 .theme{
   border-top: 1px solid #616467;
@@ -61,6 +68,7 @@ nav{
   border-color: #61DBFB;
 }
 #info{
+  margin-top: 10px;
   text-align: center;
 }
 #result{
@@ -112,11 +120,14 @@ h3{
 }
 #land-login{
   position: absolute;
-  bottom:100px;
-  right: 100px;
+  bottom:130px;
+  right: 10vw;
 }
 .land{
-  color:black
+  font-family: 'Audiowide', cursive;
+  color:black;
+  font-size: 28px;
+  padding: 0;
 }
 .separator {
   position: relative;
