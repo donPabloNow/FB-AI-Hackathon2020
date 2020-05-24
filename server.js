@@ -37,7 +37,6 @@ var spotifyApi = new SpotifyWebApi({
 spotifyApi.setAccessToken(null);
 spotifyApi.setRefreshToken(null);
 spotifyApi.resetCode();
-console.log(spotifyApi.getCredentials());
 var scopes = ["user-read-private", "user-read-email","playlist-read-private", "playlist-modify-private", "playlist-modify-public","user-top-read","user-follow-read","user-read-recently-played","user-library-read","user-modify-playback-state","user-read-playback-state"];
 var authorizeURL = spotifyApi.createAuthorizeURL(scopes);
 
@@ -67,8 +66,6 @@ app.get('/callback', function(req, res){
 
 // Returns JSON data about user
 app.get('/userInfo/', function(req, res){
-  console.log(authorizeURL);
-  console.log(spotifyApi.getCredentials());
   spotifyApi.getMe().then(function(data) {
     return data.body;
   }, function(err) {

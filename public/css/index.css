@@ -87,7 +87,7 @@ h3{
 }
 #landing-title{
   font-family: 'Audiowide', cursive;
-  font-size: 110px;
+  font-size: 90px;
   position: absolute;
   top: 130px;
   left: 10vw;
@@ -98,8 +98,9 @@ h3{
   animation-play-state: running;
 }
 #landing-subtitle{
+  font-size: 24px;
   position: absolute;
-  top: 263px;
+  top: 234px;
   left: 10vw;
   color: white;
   text-align: center;
@@ -113,6 +114,9 @@ h3{
   position: absolute;
   bottom:100px;
   right: 100px;
+}
+.land{
+  color:black
 }
 .separator {
   position: relative;
