@@ -16,6 +16,12 @@ function msToHMS( ms ) {
     return ( minutes+"m "+parseInt(seconds)+"s" );
 }
 
+function checkMobile(){
+  return (document.getElementById('result').style.display == 'block');
+}
+var ih = 80;
+if(checkMobile()) ih = 500;
+
 app.controller("mainController", ['$scope','$http','$sce', function($scope, $http, $sce) {
   $scope.view = 0;
   $scope.currid = "home";
@@ -52,8 +58,7 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
         $scope.features[6] = ([data[1].body.liveness,'Liveness']);
         $scope.features[7] = ([data[1].body.valence,'Valence']);
         $scope.features[8] = ([data[1].body.tempo,'Tempo']);
-
-        $scope.currentSong = $sce.trustAsHtml('<iframe src="https://open.spotify.com/embed/track/'+data[0].id+'" width="500" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>');
+        $scope.currentSong = $sce.trustAsHtml('<iframe src="https://open.spotify.com/embed/track/'+data[0].id+'" width="500" height="'+ih+'" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>');
       });
     })
   }
@@ -81,7 +86,7 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
     setInterval(() => {
       $http.get("/currentlyPlaying/").then(function(data) {
         $scope.currentSongId = data.data.data.body.item.id;
-        $scope.currentSong = $sce.trustAsHtml('<iframe src="https://open.spotify.com/embed/track/'+data.data.data.body.item.id+'" width="500" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>');
+        $scope.currentSong = $sce.trustAsHtml('<iframe src="https://open.spotify.com/embed/track/'+data.data.data.body.item.id+'" width="500" height="'+ih+'" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>');
         $scope.features = {};
         $scope.features[0] = ([data.data.feats.body.danceability,'Danceability']);
         $scope.features[1] = ([data.data.feats.body.energy,'Energy']);
@@ -101,10 +106,10 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
       if(data.data.data.body) {
         var ind = randomIntFromInterval(0,data.data.data.body.items.length-1);
         $scope.currentSongId = data.data.data.body.items[ind].track.id;
-        $scope.currentSong = $sce.trustAsHtml('<iframe src="https://open.spotify.com/embed/track/'+data.data.data.body.items[ind].track.id+'" width="500" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>');
+        $scope.currentSong = $sce.trustAsHtml('<iframe src="https://open.spotify.com/embed/track/'+data.data.data.body.items[ind].track.id+'" width="500" height="'+ih+'" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>');
       } else {
         $scope.currentSongId = data.data.data.id;
-        $scope.currentSong = $sce.trustAsHtml('<iframe src="https://open.spotify.com/embed/track/'+data.data.data.id+'" width="500" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>');
+        $scope.currentSong = $sce.trustAsHtml('<iframe src="https://open.spotify.com/embed/track/'+data.data.data.id+'" width="500" height="'+ih+'" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>');
       }
     })
   }

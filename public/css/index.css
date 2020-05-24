@@ -82,8 +82,26 @@ h3{
   font-weight: 400;
   font-size: 22px;
 }
-@media (max-width: 800px) {
-  body{
-    font-size: 36px;
+#result{
+  display: none;
+}
+@media (hover: none) {
+  nav{
+    min-height: 140px;
+    font-size: 19px;
   }
+  .navbar-brand{
+    font-size: 44px;
+  }
+  .btn{
+    font-size: 30px;
+  }
+  .container{
+    height: 500px;
+  }
+  .form-control{
+    font-size: 21px;
+    height:50px;
+  }
+  #result{display: block}
 }
