@@ -207,7 +207,7 @@ var determine_change = function(changeData, feats) {
 io.on('connection', function(socket){ 
 
   socket.on('query', function(packet) { //take query and current song id
-    client.message(packet.q, {}).then((data) => {
+    client.message(packet.q, {}).then((data) => { //parse string into entities
       spotifyApi.getAudioFeaturesForTrack(packet.id).then(async function(feats) {
         console.log(packet.id);
         var targets = {};
@@ -227,19 +227,20 @@ io.on('connection', function(socket){
               });
             });
           } else if(data.entities.intent[0].value == 'Search') {
-            var types = ['track']; 
-            var q = data.entities.search_term[0].value.replace(/ /g,"+");
+            var q = data.entities.search_term[0];
             if(data.entities.search_art) { //check for specific artist request
               q = 'track:';
-              q += data.entities.search_term[0].value//.replace(/ /g,"+"); //artist name;
+              q += data.entities.search_term[0].value;  //artist name;
               q += ' artist:';
-              q +=  data.entities.search_art[0].value//.replace(/ /g,"+"); //track name
+              q +=  data.entities.search_art[0].value;  //track name
             }
             console.log(q);
             spotifyApi.searchTracks(q).then(function(data) {
-            //  console.log(data.body.tracks.items)
+              //pick a random track from results
               let ind = randomIntFromInterval(0, data.body.tracks.items.length-1);
-              let id = data.body.tracks.items[ind].id;
+              let id = data.body.tracks.items[ind].id; 
+
+              //get audio features and start playing the song (we have to add to queue and skip to keep spotify queue working)
               spotifyApi.getAudioFeaturesForTrack(id).then(function(test) {
                 spotifyApi.addToQueue(data.body.tracks.items[ind].uri).then(function(res) {
                   spotifyApi.skipToNext().catch(function(err) {console.log('Error skipping song: ', err)});
@@ -247,6 +248,7 @@ io.on('connection', function(socket){
                 }).catch(function(err){'Error adding search song to queue', err.statusCode});
               }).catch(function(err){'Error getting audio from searched track:', err.statusCode});
             }).catch(function(err){'Error resolving the search', err.statusCode});
+
           } else if(data.entities.intent[0].value == 'Pause'){
             spotifyApi.pause(); 
           }else if(data.entities.intent[0].value == 'Play'){
@@ -266,10 +268,7 @@ io.on('connection', function(socket){
     spotifyApi.resetRefreshToken();
     spotifyApi.resetCode();
     console.log(spotifyApi.getCredentials());
-    if(PORT == 3000)
-      socket.emit('resp', 'http://localhost:3000');
-    else
-      socket.emit('resp', 'https://fluxdj.herokuapp.com');
+    socket.emit('resp', process.env.REDIRECT_URI);
   });
 
 
