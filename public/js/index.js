@@ -123,62 +123,64 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
     })
   }
 
-  var mic = new Wit.Microphone(document.getElementById("microphone"));
-  var info = function (msg) {
-    if(document.getElementById("info")){
-      document.getElementById("info").innerHTML = msg;
-    }
-  };
-  var error = function (msg) {
-    if(document.getElementById("error")){
-      document.getElementById("error").innerHTML = msg;
-    }
-  };
-  mic.onready = function () {
-    info("Microphone is ready to record");
-  };
-  mic.onaudiostart = function () {
-    info("Recording started");
-    error("");
-  };
-  mic.onaudioend = function () {
-    info("Recording stopped, processing started");
-  };
-  mic.onresult = function (intent, entities) {
-    var r = kv("intent", intent);
+  $scope.initMic = function() {
+    var mic = new Wit.Microphone(document.getElementById("microphone"));
+    var info = function (msg) {
+      if(document.getElementById("info")){
+        document.getElementById("info").innerHTML = msg;
+      }
+    };
+    var error = function (msg) {
+      if(document.getElementById("error")){
+        document.getElementById("error").innerHTML = msg;
+      }
+    };
+    mic.onready = function () {
+      info("Microphone is ready to record");
+    };
+    mic.onaudiostart = function () {
+      info("Recording started");
+      error("");
+    };
+    mic.onaudioend = function () {
+      info("Recording stopped, processing started");
+    };
+    mic.onresult = function (intent, entities) {
+      var r = kv("intent", intent);
 
-    for (var k in entities) {
-      var e = entities[k];
+      for (var k in entities) {
+        var e = entities[k];
 
-      if (!(e instanceof Array)) {
-        r += kv(k, e.value);
-      } else {
-        for (var i = 0; i < e.length; i++) {
-          r += kv(k, e[i].value);
+        if (!(e instanceof Array)) {
+          r += kv(k, e.value);
+        } else {
+          for (var i = 0; i < e.length; i++) {
+            r += kv(k, e[i].value);
+          }
         }
       }
-    }
 
-    document.getElementById("result").innerHTML = r;
-  };
-  mic.onerror = function (err) {
-    error("Error: " + err);
-  };
-	mic.onconnecting = function () {
-		info("Microphone is connecting");
-	};
-	mic.ondisconnected = function () {
-    info("Microphone is not connected");
+      document.getElementById("result").innerHTML = r;
+    };
+    mic.onerror = function (err) {
+      error("Error: " + err);
+    };
+    mic.onconnecting = function () {
+      info("Microphone is connecting");
+    };
+    mic.ondisconnected = function () {
+      info("Microphone is not connected");
+      mic.connect("VF37BMDRZO74V4XNSGLDRCCR6LZS2MQD");
+    };
+
     mic.connect("VF37BMDRZO74V4XNSGLDRCCR6LZS2MQD");
-	};
 
-	mic.connect("VF37BMDRZO74V4XNSGLDRCCR6LZS2MQD");
-
-  function kv (k, v) {
-    if (toString.call(v) !== "[object String]") {
-      v = JSON.stringify(v);
+    function kv (k, v) {
+      if (toString.call(v) !== "[object String]") {
+        v = JSON.stringify(v);
+      }
+      return k + "=" + v + "\n";
     }
-    return k + "=" + v + "\n";
   }
 }]);
 

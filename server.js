@@ -227,7 +227,7 @@ io.on('connection', function(socket){
               });
             });
           } else if(data.entities.intent[0].value == 'Search') {
-            var types = ['track'];
+            var types = ['track']; //ceck for art term then change q accordingly
             var q = data.entities.search_term[0].value.replace(/ /g,"+");
             console.log(q);
             spotifyApi.search(q, types).then(function(data) {
