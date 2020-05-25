@@ -1,10 +1,6 @@
-# MEAN-Boilerplate
- Template for quickstart mean stack app
+# Flux
+A fully voice controlled song reccomendation and player for Spotify
 
-Download Files and run
+NOTE: requires spotify premium and an open spotify player
 
-```npm install``` 
-
-the get quick template for MEAN: MondgoDB Express AngularJS Node.js
-
-run ```node server``` to start the server locally.
+https://fluxdj.herokuapp.com/
