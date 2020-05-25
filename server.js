@@ -227,11 +227,17 @@ io.on('connection', function(socket){
               });
             });
           } else if(data.entities.intent[0].value == 'Search') {
-            var types = ['track']; //ceck for art term then change q accordingly
+            var types = ['track']; 
             var q = data.entities.search_term[0].value.replace(/ /g,"+");
+            if(data.entities.search_art) { //check for specific artist request
+              q = 'track:';
+              q += data.entities.search_term[0].value//.replace(/ /g,"+"); //artist name;
+              q += ' artist:';
+              q +=  data.entities.search_art[0].value//.replace(/ /g,"+"); //track name
+            }
             console.log(q);
-            spotifyApi.search(q, types).then(function(data) {
-             // console.log(data.body.tracks.items)
+            spotifyApi.searchTracks(q).then(function(data) {
+            //  console.log(data.body.tracks.items)
               let ind = randomIntFromInterval(0, data.body.tracks.items.length-1);
               let id = data.body.tracks.items[ind].id;
               spotifyApi.getAudioFeaturesForTrack(id).then(function(test) {
