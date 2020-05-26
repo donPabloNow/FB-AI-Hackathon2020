@@ -136,7 +136,7 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
       }
     };
     mic.onready = function () {
-      info("Microphone is ready to record");
+      info("Click the microphone to record");
     };
     mic.onaudiostart = function () {
       info("Recording started");
@@ -146,8 +146,11 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
       info("Recording stopped, processing started");
     };
     mic.onresult = function (intent, entities, res) {
-      $scope.search = res.msg_body;
-      $scope.query()
+      console.log(res.msg_body);
+      if(res.msg_body) {
+        $scope.search = res.msg_body;
+        $scope.query()
+      }
       document.getElementById("result").innerHTML = res.msg_body;
     };
     mic.onerror = function (err) {
