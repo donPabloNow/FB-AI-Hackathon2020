@@ -145,22 +145,10 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
     mic.onaudioend = function () {
       info("Recording stopped, processing started");
     };
-    mic.onresult = function (intent, entities) {
-      var r = kv("intent", intent);
-
-      for (var k in entities) {
-        var e = entities[k];
-
-        if (!(e instanceof Array)) {
-          r += kv(k, e.value);
-        } else {
-          for (var i = 0; i < e.length; i++) {
-            r += kv(k, e[i].value);
-          }
-        }
-      }
-
-      document.getElementById("result").innerHTML = r;
+    mic.onresult = function (intent, entities, res) {
+      $scope.search = res.msg_body;
+      $scope.query()
+      document.getElementById("result").innerHTML = res.msg_body;
     };
     mic.onerror = function (err) {
       error("Error: " + err);
@@ -174,13 +162,6 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
     };
 
     mic.connect("VF37BMDRZO74V4XNSGLDRCCR6LZS2MQD");
-
-    function kv (k, v) {
-      if (toString.call(v) !== "[object String]") {
-        v = JSON.stringify(v);
-      }
-      return k + "=" + v + "\n";
-    }
   }
 }]);
 
