@@ -33,8 +33,6 @@ function draw() {
   var w = width/ (prevLevels.length * spacing);
 
   var minHeight = 2;
-  var roundness = 20;
-
   // add new level to end of array
   prevLevels.push(level);
 
@@ -45,13 +43,11 @@ function draw() {
   for (var i = 0; i < prevLevels.length; i++) {
 
     var x = map(i, prevLevels.length, 0, width/2, width);
-    var h = map(prevLevels[i], 0, 0.5, minHeight, height);
+    var h = map(prevLevels[i], 0, 0.5, minHeight, height - 220);
 
     var alphaValue = logMap(i, 0, prevLevels.length, 1, 250);
 
-    var hueValue = map(h, minHeight, height, 200, 255);
-
-    fill(hueValue, 255, 255, alphaValue);
+    fill(192, 61, 98, alphaValue);
 
     rect(x+74, height/2, w, h);
     rect(width -x-74, height/2, w, h);
