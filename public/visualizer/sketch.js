@@ -23,7 +23,7 @@ function setup() {
 }
 
 function draw() {
-  background(15);
+  background(0, 0, 6);
   fill(255, 10)
 
   var level = amplitude.getLevel();
