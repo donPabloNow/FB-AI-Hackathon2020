@@ -59,7 +59,7 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
         $scope.features[6] = ([data[1].body.liveness,'Liveness']);
         $scope.features[7] = ([data[1].body.valence,'Valence']);
         $scope.features[8] = ([data[1].body.tempo,'Tempo']);
-        $scope.currentSong = $sce.trustAsHtml('<iframe src="https://open.spotify.com/embed/track/'+data[0].id+'" width="500" height="'+ih+'" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>');
+        $scope.currentSong = $sce.trustAsHtml('<iframe src="https://open.spotify.com/embed/track/'+data[0].id+'" width="100%" height="'+ih+'" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>');
       });
     })
   }
@@ -90,7 +90,7 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
       $http.get("/currentlyPlaying?id="+id).then(function(data) {
         if(data.data.data) {
           $scope.currentSongId = data.data.data.body.item.id;
-          $scope.currentSong = $sce.trustAsHtml('<iframe src="https://open.spotify.com/embed/track/'+data.data.data.body.item.id+'" width="500" height="'+ih+'" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>');
+          $scope.currentSong = $sce.trustAsHtml('<iframe src="https://open.spotify.com/embed/track/'+data.data.data.body.item.id+'" width="100%" height="'+ih+'" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>');
           $scope.features = {};
           $scope.features[0] = ([data.data.feats.body.danceability,'Danceability']);
           $scope.features[1] = ([data.data.feats.body.energy,'Energy']);
@@ -112,11 +112,11 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
         var ind = randomIntFromInterval(0,data.data.data.body.items.length-1);
         $scope.currentSongId = data.data.data.body.items[ind].track.id;
         $scope.initialId = $scope.currentSongId;
-        $scope.currentSong = $sce.trustAsHtml('<iframe src="https://open.spotify.com/embed/track/'+data.data.data.body.items[ind].track.id+'" width="500" height="'+ih+'" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>');
+        $scope.currentSong = $sce.trustAsHtml('<iframe src="https://open.spotify.com/embed/track/'+data.data.data.body.items[ind].track.id+'" width="100%" height="'+ih+'" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>');
       } else if(data.data.data !== 'x') {
         $scope.currentSongId = data.data.data.id;
         $scope.initialId = $scope.currentSongId;
-        $scope.currentSong = $sce.trustAsHtml('<iframe src="https://open.spotify.com/embed/track/'+data.data.data.id+'" width="500" height="'+ih+'" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>');
+        $scope.currentSong = $sce.trustAsHtml('<iframe src="https://open.spotify.com/embed/track/'+data.data.data.id+'" width="100%" height="'+ih+'" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>');
       } else {
         $scope.currentSong =  $sce.trustAsHtml('<p class="text-center">No device found! Open a Spotify player on any device and refresh this page!</p>')
       }

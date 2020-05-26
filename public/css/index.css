@@ -32,7 +32,10 @@ nav{
   background-color: #000!important;
 }
 .container{
-  margin-top: calc(30vh - 140px);
+  margin-top: 0px;
+  width: 100vw !important;
+  max-width: 100vw !important;
+  padding: 0 0;
 }
 .stats{
   color:white;
@@ -53,19 +56,20 @@ nav{
 .form-control{
   max-width: 500px;
   margin: 0 auto;
+  margin-top: 15px
 }
 .hidden{
   display: none;
 }
 .currently-playing{
-  width: 502px;
+  width: 100%;
   height: 82px;
   margin: 0 auto;
   border: 1px solid black;
 }
 .wit-microphone{
   margin: 0 auto;
-  margin-top: 75px;
+  margin-top: calc(40vh - 200px);
   cursor: pointer;
 }
 .wit-microphone:hover{
@@ -196,6 +200,28 @@ h3{
   width: 100vw;
   height: 100vh;
 }
+input[type="text"] {
+  text-align: center;
+  display: block;
+  width: 400px;
+  padding: 8px 12px 10px 12px;
+  border: 1px solid rgba(0,0,0,.5);
+  background: rgba(0,0,0,.25);
+}
+.form-control:focus{
+  background-color: rgba(0,0,0,.25);
+}
+[placeholder]::-webkit-input-placeholder { color: rgba(255,255,255,.8); }
+[placeholder]:hover::-webkit-input-placeholder { color: rgba(255,255,255,.4); }
+[placeholder]:focus::-webkit-input-placeholder { color: transparent; }
+
+[placeholder]::-moz-placeholder { color: rgba(255,255,255,.8); }
+[placeholder]:hover::-moz-placeholder { color: rgba(255,255,255,.4); }
+[placeholder]:focus::-moz-placeholder { color: transparent; }
+
+[placeholder]:-ms-input-placeholder { color: rgba(255,255,255,.8); }
+[placeholder]:hover:-ms-input-placeholder { color: rgba(255,255,255,.4); }
+[placeholder]:focus:-ms-input-placeholder { color: transparent; }
 
 @keyframes startup{
   from{

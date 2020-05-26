@@ -220,8 +220,10 @@ io.on('connection', function(socket){
         var targets = {};
         if(data) {
           console.log(data.entities);
+          //check command intent 
           if(data.entities.intent && data.entities.intent[0].value != 'Search' && data.entities.intent[0].value !='Pause' && data.entities.intent[0].value != 'Play') {
-            targets = await determine_change(data, feats);
+            targets = await determine_change(data, feats);//generate new target audio features
+            //choose a new song from recommendations
             spotifyApi.getRecommendations({limit: 50, seed_tracks: [packet.id], targets}).then(function(recs) {
               let ind = randomIntFromInterval(0, recs.body.tracks.length-1);
               spotifyApi.getAudioFeaturesForTrack(recs.body.tracks[ind].id).then(async function(feats) {
