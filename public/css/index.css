@@ -4,6 +4,7 @@ html {
 body {
   font-weight: 100;
   color: white;
+  background-color: #0f0f0f;
 }
 nav{
   font-family: 'Audiowide', cursive;
@@ -21,12 +22,13 @@ nav{
 }
 .theme{
   border-top: 1px solid #616467;
-  background-color: #0f0f0f
+  background-color: transparent;
 }
 .jumbotron{
   padding: 0!important;
   border-radius: 0px;
   height: calc(100vh - 176px);
+  margin: 0!important;
 }
 .bg-dark{
   background-color: #000!important;
@@ -69,7 +71,7 @@ nav{
 }
 .wit-microphone{
   margin: 0 auto;
-  margin-top: calc(40vh - 200px);
+  margin-top: calc(49vh - 220px);
   cursor: pointer;
 }
 .wit-microphone:hover{
@@ -87,8 +89,11 @@ h2{
   text-align: center;
 }
 .row{
+  height: 106px;
   justify-content: center;
   margin: 0;
+  padding-top: 24px;
+  background: black;
 }
 .col{
   width: fit-content;
@@ -223,6 +228,12 @@ input[type="text"] {
 [placeholder]:hover:-ms-input-placeholder { color: rgba(255,255,255,.4); }
 [placeholder]:focus:-ms-input-placeholder { color: transparent; }
 
+canvas{
+  z-index: -1;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
 @keyframes startup{
   from{
 
