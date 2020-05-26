@@ -121,7 +121,7 @@ app.get('/radio', function(req, res) {
 app.get('/currentlyPlaying', function(req, res) {
   spotifyApi.getMyCurrentPlayingTrack().then(function(data) {
     var time_left = data.body.item.duration_ms - data.body.progress_ms;
-    if(time_left < 30000) {
+    if(time_left < 11000) {
       spotifyApi.getRecommendations({limit: 50, seed_tracks: [data.body.item.id]}).then(function(recs) {
         let ind = randomIntFromInterval(0,recs.body.tracks.length-1);
         spotifyApi.addToQueue(recs.body.tracks[ind].uri).catch(function(err){console.log('error adding to queue', err)});
