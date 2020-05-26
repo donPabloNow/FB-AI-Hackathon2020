@@ -53,8 +53,8 @@ function draw() {
 
     fill(hueValue, 255, 255, alphaValue);
 
-    rect(x, height/2, w, h);
-    rect(width - x, height/2, w, h);
+    rect(x+74, height/2, w, h);
+    rect(width -x-74, height/2, w, h);
   }
 
 }
