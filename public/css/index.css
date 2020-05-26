@@ -163,7 +163,7 @@ h3{
   height: 100%;
   background-color: #61DBFB;
   clip-path: polygon(0% 0%, -34% 100%, 100000000% 100%);
-  animation: startup 1s ease-out 0s 1;
+  animation: startup 1s ease-out 100ms 1;
   animation-fill-mode: forwards;
   animation-play-state: running;
 }
@@ -215,6 +215,7 @@ input[type="text"] {
 }
 .form-control:focus{
   background-color: rgba(0,0,0,.25);
+  color: #61DBFB;
 }
 [placeholder]::-webkit-input-placeholder { color: rgba(255,255,255,.8); }
 [placeholder]:hover::-webkit-input-placeholder { color: rgba(255,255,255,.4); }
