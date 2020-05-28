@@ -248,7 +248,7 @@ canvas{
 .fa-pause, .fa-play{
   position: absolute;
   left: 50%;
-  transform: translateX(-100%);
+  transform: translateX(-75%);
   cursor: pointer;
 }
 ul{
