@@ -263,8 +263,10 @@ io.on('connection', function(socket){
 
           } else if(data.entities.intent[0].value == 'Pause'){
             spotifyApi.pause(); 
+            socket.emit('pause');
           }else if(data.entities.intent[0].value == 'Play'){
             spotifyApi.play();
+            socket.emit('play');
           } else {
             console.log("Couldnt understand the request");//bad data
           }

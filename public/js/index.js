@@ -34,6 +34,7 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
   $scope.currentSong;
   $scope.currentSongId;
   $scope.initialId;
+  $scope.playing = false;
   $scope.changeActive = function(id) {
     document.getElementById($scope.currid).className = 'nav-link'; 
     document.getElementById(id).className = 'nav-link active';
@@ -48,6 +49,7 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
     socket.on('query_response', function(data) {
       $scope.$apply(function () {
         var ind = 0;
+        $scope.playing = true;
         $scope.currentSongId = data[0].id;
         $scope.features = {};
         $scope.features[0] = ([data[1].body.danceability,'Danceability']);
@@ -62,6 +64,17 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
         $scope.currentSong = $sce.trustAsHtml('<iframe src="https://open.spotify.com/embed/track/'+data[0].id+'" width="100%" height="'+ih+'" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>');
       });
     })
+    socket.on('play', function() {
+      $scope.$apply(function () {
+        $scope.playing = true;
+      });
+    });
+    socket.on('pause', function() {
+      console.log('paused;')
+      $scope.$apply(function () {
+        $scope.playing = false;
+      });
+    });
   }
   $scope.login = function(){
     $http.get("/authUrl/").then(function(data) {
@@ -85,6 +98,7 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
 
   $scope.runCheck = function(id) {
     $http.get("/currentlyPlaying?id="+id).then(function(data) {
+      $scope.playing = true;
       if(data.data.data) {
         $scope.currentSongId = data.data.data.body.item.id;
         $scope.currentSong = $sce.trustAsHtml('<iframe src="https://open.spotify.com/embed/track/'+data.data.data.body.item.id+'" width="100%" height="'+ih+'" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>');
@@ -101,7 +115,6 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
       }
     });
   }
-
 
   $scope.checkCurrent = function(){
     var id = $scope.currentSongId;
