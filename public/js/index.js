@@ -83,26 +83,34 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
     })
   }
 
+  $scope.runCheck = function(id) {
+    $http.get("/currentlyPlaying?id="+id).then(function(data) {
+      if(data.data.data) {
+        $scope.currentSongId = data.data.data.body.item.id;
+        $scope.currentSong = $sce.trustAsHtml('<iframe src="https://open.spotify.com/embed/track/'+data.data.data.body.item.id+'" width="100%" height="'+ih+'" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>');
+        $scope.features = {};
+        $scope.features[0] = ([data.data.feats.body.danceability,'Danceability']);
+        $scope.features[1] = ([data.data.feats.body.energy,'Energy']);
+        $scope.features[2] = ([data.data.feats.body.loudness,'Loudness']);
+        $scope.features[3] = ([data.data.feats.body.speechiness,'Speechiness']);
+        $scope.features[4] = ([data.data.feats.body.acousticness,'Acousticness']);
+        $scope.features[5] = ([data.data.feats.body.instrumentalness,'Instrumentalness']);
+        $scope.features[6] = ([data.data.feats.body.liveness,'Liveness']);
+        $scope.features[7] = ([data.data.feats.body.valence,'Valence']);
+        $scope.features[8] = ([data.data.feats.body.tempo,'Tempo']);
+      }
+    });
+  }
+
+
   $scope.checkCurrent = function(){
+    var id = $scope.currentSongId;
+    id == $scope.initialId ? id = null : id; 
+    $scope.runCheck(id);
     setInterval(() => {
       var id = $scope.currentSongId;
       id == $scope.initialId ? id = null : id; 
-      $http.get("/currentlyPlaying?id="+id).then(function(data) {
-        if(data.data.data) {
-          $scope.currentSongId = data.data.data.body.item.id;
-          $scope.currentSong = $sce.trustAsHtml('<iframe src="https://open.spotify.com/embed/track/'+data.data.data.body.item.id+'" width="100%" height="'+ih+'" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>');
-          $scope.features = {};
-          $scope.features[0] = ([data.data.feats.body.danceability,'Danceability']);
-          $scope.features[1] = ([data.data.feats.body.energy,'Energy']);
-          $scope.features[2] = ([data.data.feats.body.loudness,'Loudness']);
-          $scope.features[3] = ([data.data.feats.body.speechiness,'Speechiness']);
-          $scope.features[4] = ([data.data.feats.body.acousticness,'Acousticness']);
-          $scope.features[5] = ([data.data.feats.body.instrumentalness,'Instrumentalness']);
-          $scope.features[6] = ([data.data.feats.body.liveness,'Liveness']);
-          $scope.features[7] = ([data.data.feats.body.valence,'Valence']);
-          $scope.features[8] = ([data.data.feats.body.tempo,'Tempo']);
-        }
-      });
+      $scope.runCheck(id);
     }, 10000);
   }
   $scope.getMyRecent = function() {
@@ -166,6 +174,9 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
 
     mic.connect("VF37BMDRZO74V4XNSGLDRCCR6LZS2MQD");
   }
+
+
+
 }]);
 
 

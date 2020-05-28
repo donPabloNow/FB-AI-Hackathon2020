@@ -242,7 +242,7 @@ io.on('connection', function(socket){
               q += ' artist:';
               q +=  data.entities.search_art[0].value;  //track name
             }
-            if(data.entities.search_genre[0].value) {
+            if(data.entities.search_genre) {
               q= 'genre:';
               q+= data.entities.search_genre[0].value;
             }
@@ -282,7 +282,6 @@ io.on('connection', function(socket){
     console.log(spotifyApi.getCredentials());
     socket.emit('resp', process.env.REDIRECT_URI);
   });
-
 
 });
 
