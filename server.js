@@ -285,6 +285,13 @@ io.on('connection', function(socket){
     socket.emit('resp', process.env.REDIRECT_URI);
   });
 
+  socket.on('pause', function() {
+    spotifyApi.pause();
+  })
+  socket.on('play', function() {
+    spotifyApi.play();
+  });
+
 });
 
 

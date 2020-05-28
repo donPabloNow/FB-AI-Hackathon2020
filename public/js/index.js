@@ -41,6 +41,16 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
     $scope.currid = id;
   }
 
+  $scope.pause = function() {
+    socket.emit('pause');
+    $scope.playing = false;
+  }
+
+  $scope.play = function() {
+    socket.emit('play');
+    $scope.playing = true;
+  }
+
   $scope.query = function() {
     var q =$scope.search;
     var id=$scope.currentSongId;
