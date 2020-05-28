@@ -17,6 +17,16 @@ nav{
 .navbar-brand{
   font-size: 37px;
 }
+.navbar-nav{
+  display: flex;
+  align-items: center;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  padding-left: 0;
+  margin-bottom: 0;
+  list-style: none;
+  width: 34%;
+}
 .welcome{
   font-family: 'Poppins', sans-serif;
 }
@@ -234,6 +244,18 @@ canvas{
   position: absolute;
   top: 0;
   left: 0;
+}
+.fa-pause{
+  position: absolute;
+  left: 50%;
+  transform: translateX(-100%);
+  cursor: pointer;
+}
+ul{
+  margin-top: -14px;
+}
+.fa-pause:hover{
+  filter: invert(78%) sepia(9%) saturate(2527%) hue-rotate(154deg) brightness(1007%) contrast(103%);
 }
 @keyframes startup{
   from{
