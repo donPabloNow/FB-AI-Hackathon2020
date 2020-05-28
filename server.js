@@ -134,7 +134,7 @@ app.get('/currentlyPlaying', function(req, res) {
     } else {
       res.json({data:null});
     }
-  }).catch(function(err){console.log('Error getting current song: ', err.statusCode)});
+  }).catch(function(err){});
 })
 
 var determine_change = function(changeData, feats) {

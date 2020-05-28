@@ -108,7 +108,6 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
 
   $scope.runCheck = function(id) {
     $http.get("/currentlyPlaying?id="+id).then(function(data) {
-      $scope.playing = true;
       if(data.data.data) {
         $scope.currentSongId = data.data.data.body.item.id;
         $scope.currentSong = $sce.trustAsHtml('<iframe src="https://open.spotify.com/embed/track/'+data.data.data.body.item.id+'" width="100%" height="'+ih+'" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>');
@@ -129,6 +128,7 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
   $scope.checkCurrent = function(){
     var id = $scope.currentSongId;
     id == $scope.initialId ? id = null : id; 
+    $scope.playing = true;
     $scope.runCheck(id);
     setInterval(() => {
       var id = $scope.currentSongId;
