@@ -242,6 +242,10 @@ io.on('connection', function(socket){
               q += ' artist:';
               q +=  data.entities.search_art[0].value;  //track name
             }
+            if(data.entities.search_genre[0].value) {
+              q= 'genre:';
+              q+= data.entities.search_genre[0].value;
+            }
             console.log(q);
             spotifyApi.searchTracks(q).then(function(data) {
               //pick a random track from results
