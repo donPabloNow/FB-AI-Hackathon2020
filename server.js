@@ -238,7 +238,9 @@ io.on('connection', function(socket){
               });
             });
           } else if(data.entities.intent[0].value == 'Search') {
-            var q = data.entities.search_term[0].value;
+            var q;
+            if(data.entities.search_term)
+              q = data.entities.search_term[0].value;
             if(data.entities.search_art) { //check for specific artist request
               q = 'track:';
               q += data.entities.search_term[0].value;  //artist name;
