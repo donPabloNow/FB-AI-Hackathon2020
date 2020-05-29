@@ -8,7 +8,6 @@ const play = ({
   }
 }) => {
   getOAuthToken(access_token => {
-    console.log(id, access_token)
     fetch(`https://api.spotify.com/v1/me/player/play?device_id=${id}`, {
       method: 'PUT',
       body: JSON.stringify({ uris: [spotify_uri] }),
@@ -27,7 +26,8 @@ window.onSpotifyWebPlaybackSDKReady = () => {
   const token = urlParams.get('token')
   const player = new Spotify.Player({
     name: 'Web Playback SDK Quick Start Player',
-    getOAuthToken: cb => { cb(token); }
+    getOAuthToken: cb => { cb(token); },
+    volume: .5
   });
 
   // Error handling
@@ -35,9 +35,6 @@ window.onSpotifyWebPlaybackSDKReady = () => {
   player.addListener('authentication_error', ({ message }) => { console.error(message); });
   player.addListener('account_error', ({ message }) => { console.error(message); });
   player.addListener('playback_error', ({ message }) => { console.error(message); });
-
-  // Playback status updates
-  player.addListener('player_state_changed', state => { console.log(state); });
 
   // Ready
   player.addListener('ready', ({ device_id }) => {
