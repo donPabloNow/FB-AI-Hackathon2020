@@ -22,6 +22,7 @@ function checkMobile(){
 var ih = 80;
 if(checkMobile()) ih = 500;
 
+
 app.controller("mainController", ['$scope','$http','$sce', function($scope, $http, $sce) {
   $scope.view = 0;
   $scope.currid = "home";
@@ -143,12 +144,23 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
         var ind = randomIntFromInterval(0,data.data.data.body.items.length-1);
         $scope.currentSongId = data.data.data.body.items[ind].track.id;
         $scope.initialId = $scope.currentSongId;
+        if(player_loaded) {
+          play({playerInstance: player, spotify_uri: data.data.data.body.items[ind].track.uri})
+        } else {
+          var watch = setInterval(() => {
+            if(player_loaded) {
+              play({playerInstance: player, spotify_uri: data.data.data.body.items[ind].track.uri})
+              clearInterval(watch);
+            }
+          });
+        }
         $scope.currentSong = $sce.trustAsHtml('<iframe src="https://open.spotify.com/embed/track/'+data.data.data.body.items[ind].track.id+'" width="100%" height="'+ih+'" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>');
       } else if(data.data.data !== 'x') {
         $scope.currentSongId = data.data.data.id;
         $scope.initialId = $scope.currentSongId;
         $scope.currentSong = $sce.trustAsHtml('<iframe src="https://open.spotify.com/embed/track/'+data.data.data.id+'" width="100%" height="'+ih+'" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>');
       } else {
+        console.log(data);
         $scope.currentSong =  $sce.trustAsHtml('<p class="text-center">No device found! Open a Spotify player on any device and refresh this page!</p>')
       }
     })
@@ -197,7 +209,6 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
 
     mic.connect("VF37BMDRZO74V4XNSGLDRCCR6LZS2MQD");
   }
-
 
 
 }]);

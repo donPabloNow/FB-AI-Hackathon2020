@@ -94,8 +94,11 @@ app.get('/getMyRecent', async function(req, res) {
             }
           }).catch(function(err){console.log('Error getting current playback state: ',err)});
         } else {
-          let data = 'x';
-          res.json({data: data});
+          spotifyApi.getMyRecentlyPlayedTracks().then(function(data) {
+            res.json({data:data});
+          }).catch(function(err){
+            console.log('Error getting recently played tracks', err.statusCode);
+          });
         }
       }).catch(function(err){console.log('Error getting current devices: ', err);});
     }

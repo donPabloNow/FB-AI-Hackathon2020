@@ -18,13 +18,13 @@ const play = ({
     });
   });
 };
-
-
+var player_loaded = false;
+var player;
 window.onSpotifyWebPlaybackSDKReady = () => {
   const queryString = window.location.search;
   const urlParams = new URLSearchParams(queryString);
   const token = urlParams.get('token')
-  const player = new Spotify.Player({
+  player = new Spotify.Player({
     name: 'Web Playback SDK Quick Start Player',
     getOAuthToken: cb => { cb(token); },
     volume: .5
@@ -38,8 +38,8 @@ window.onSpotifyWebPlaybackSDKReady = () => {
 
   // Ready
   player.addListener('ready', ({ device_id }) => {
+    player_loaded = true;
     console.log('Ready with Device ID', device_id);
-    play({playerInstance: player, spotify_uri: 'spotify:track:7xGfFoTpQ2E7fRF5lN10tr'})
   })
 
   // Not Ready
