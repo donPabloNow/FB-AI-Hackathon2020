@@ -12,13 +12,13 @@ function setup() {
   rectMode(CENTER);
   colorMode(HSB);
 
-  mic = new p5.AudioIn();
-  mic.start();
+  mic_ = new p5.AudioIn();
+  mic_.start();
 
   getAudioContext().suspend();
   
   amplitude = new p5.Amplitude();
-  amplitude.setInput(mic);
+  amplitude.setInput(mic_);
   amplitude.smooth(0.6);
 }
 
