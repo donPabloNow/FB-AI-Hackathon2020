@@ -25,8 +25,9 @@ function setup() {
 function draw() {
   background(0, 0, 6);
   fill(255, 10)
-
-  var level = amplitude.getLevel();
+  var level = .001;
+  if(recording)
+    level = amplitude.getLevel();
 
   // rectangle variables
   var spacing = 10;
