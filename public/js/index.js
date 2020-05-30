@@ -45,19 +45,19 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
   }
 
   $scope.pause = function() {
-    socket.emit('pause');
+    if($scope.premium) socket.emit('pause');
     $scope.playing = false;
   }
 
   $scope.play = function() {
-    socket.emit('play');
+    if($scope.premium) socket.emit('play');
     $scope.playing = true;
   }
 
   $scope.query = function() {
     var q =$scope.search;
     var id=$scope.currentSongId;
-    var packet = {q, id};
+    var packet = {q, id}
     if(!$scope.premium) packet.nonPremium = true;
     socket.emit('query', packet);
     socket.on('query_response', function(data) {
@@ -75,7 +75,7 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
         $scope.features[6] = ([data[1].body.liveness,'Liveness']);
         $scope.features[7] = ([data[1].body.valence,'Valence']);
         $scope.features[8] = ([data[1].body.tempo,'Tempo']);
-        $scope.currentSong = $sce.trustAsHtml('<iframe src="https://open.spotify.com/embed/track/'+data[0].id+'" width="100%" height="'+ih+'" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>');
+        $scope.currentSong = $sce.trustAsHtml('<iframe id="audioframe" src="https://open.spotify.com/embed/track/'+data[0].id+'" width="100%" height="'+ih+'" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>');
       });
     })
     socket.on('play', function() {
