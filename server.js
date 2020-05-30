@@ -218,11 +218,6 @@ var determine_change = function(changeData, feats) {
 
 io.on('connection', function(socket){ 
 
-  function nonPremiumSearch(packet) {
-    console.log('searchng non-premium w/ ', packet);
-
-  }
-
   socket.on('query', function(packet) { //take query and current song id
     client.message(packet.q, {}).then((data) => { //parse string into entities
         console.log(packet.id);
@@ -246,7 +241,7 @@ io.on('connection', function(socket){
                 });
               });
             }).catch(function(err){console.log(err)});
-          } else if(data.entities.intent[0].value == 'Search') {
+          } else if(data.entities.intent && data.entities.intent[0].value == 'Search') {
             var q;
             if(data.entities.search_term)
               q = data.entities.search_term[0].value;
@@ -276,10 +271,10 @@ io.on('connection', function(socket){
 
             }).catch(function(err){'Error resolving the search', err.statusCode});
 
-          } else if(data.entities.intent[0].value == 'Pause'){
+          } else if(data.entities.intent && data.entities.intent[0].value == 'Pause'){
             if(!packet.nonPremium) spotifyApi.pause(); 
             socket.emit('pause');
-          }else if(data.entities.intent[0].value == 'Play'){
+          }else if(data.entities.intent && data.entities.intent[0].value == 'Play'){
             if(!packet.nonPremium) spotifyApi.play();
             socket.emit('play');
           } else {

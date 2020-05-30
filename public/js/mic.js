@@ -19,14 +19,6 @@ mic.onaudiostart = function () {
 mic.onaudioend = function () {
   info("Recording stopped, processing started");
 };
-mic.onresult = function (intent, entities, res) {
-  console.log(res.msg_body);
-  if(res.msg_body) {
-    $scope.search = res.msg_body;
-    $scope.query()
-  }
-  document.getElementById("result").innerHTML = res.msg_body;
-};
 mic.onerror = function (err) {
   error("Error: " + err);
 };

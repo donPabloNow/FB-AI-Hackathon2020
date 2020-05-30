@@ -181,4 +181,12 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
       }
     })
   }
+  mic.onresult = function (intent, entities, res) {
+    console.log(res.msg_body);
+    if(res.msg_body) {
+      $scope.search = res.msg_body;
+      $scope.query()
+    }
+    document.getElementById("result").innerHTML = res.msg_body;
+  };
 }]);
