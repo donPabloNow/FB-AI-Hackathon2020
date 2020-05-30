@@ -1,6 +1,6 @@
 var mic;
 var amplitude;
-
+var recording = false;
 var prevLevels = new Array(60);
 
 
@@ -55,6 +55,13 @@ function draw() {
 
 }
 
-function mousePressed() {
-  userStartAudio();
+function mousePressed(e) {
+  if(e.target.className.baseVal === "mic-svg mic-box") {
+    if(recording) {
+      getAudioContext().suspend();
+    } else{
+      userStartAudio();
+    }
+    recording = !recording;
+  }
 }
