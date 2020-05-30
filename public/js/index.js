@@ -1,5 +1,6 @@
 var app = angular.module("myApp", []);
 var socket = io();
+jq = jQuery.noConflict();
 function randomIntFromInterval(min, max) { // min and max included 
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
@@ -97,6 +98,10 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
       return data.data.user;
     }).then( function(result){
       $scope.userInfo = result;
+      if(!$scope.userInfo.product || $scope.userInfo.product != 'premium') {
+        console.log($scope.userInfo.product);
+        jq('#non-premium').modal('show');
+      }
     })
   }
   $scope.logout = function(){

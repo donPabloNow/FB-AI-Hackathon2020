@@ -217,26 +217,28 @@ var determine_change = function(changeData, feats) {
 io.on('connection', function(socket){ 
 
   socket.on('query', function(packet) { //take query and current song id
+    console.log(packet)
     client.message(packet.q, {}).then((data) => { //parse string into entities
-      spotifyApi.getAudioFeaturesForTrack(packet.id).then(async function(feats) {
         console.log(packet.id);
         var targets = {};
         if(data) {
           console.log(data.entities);
           //check command intent 
           if(data.entities.intent && data.entities.intent[0].value != 'Search' && data.entities.intent[0].value !='Pause' && data.entities.intent[0].value != 'Play') {
-            targets = await determine_change(data, feats);//generate new target audio features
-            //choose a new song from recommendations
-            spotifyApi.getRecommendations({limit: 50, seed_tracks: [packet.id], targets}).then(function(recs) {
-              let ind = randomIntFromInterval(0, recs.body.tracks.length-1);
-              spotifyApi.getAudioFeaturesForTrack(recs.body.tracks[ind].id).then(async function(feats) {
-                spotifyApi.play({uris: [recs.body.tracks[ind].uri]}).then(function(res) {
-                  socket.emit('query_response', [recs.body.tracks[ind], feats]);
-                }).catch(function(err) {
-                  console.log('Error adding song to queue: ', err.statusCode);
+            spotifyApi.getAudioFeaturesForTrack(packet.id).then(async function(feats) {
+              targets = await determine_change(data, feats);//generate new target audio features
+              //choose a new song from recommendations
+              spotifyApi.getRecommendations({limit: 50, seed_tracks: [packet.id], targets}).then(function(recs) {
+                let ind = randomIntFromInterval(0, recs.body.tracks.length-1);
+                spotifyApi.getAudioFeaturesForTrack(recs.body.tracks[ind].id).then(async function(feats) {
+                  spotifyApi.play({uris: [recs.body.tracks[ind].uri]}).then(function(res) {
+                    socket.emit('query_response', [recs.body.tracks[ind], feats]);
+                  }).catch(function(err) {
+                    console.log('Error adding song to queue: ', err.statusCode);
+                  });
                 });
               });
-            });
+            }).catch(function(err){console.log(err)});
           } else if(data.entities.intent[0].value == 'Search') {
             var q;
             if(data.entities.search_term)
@@ -278,8 +280,7 @@ io.on('connection', function(socket){
         } else{
           console.log("Couldnt understand the request");
         }
-      });
-    });
+    }).catch(function(err){console.log(err)});
   });
 
   socket.on('logout', function() {
