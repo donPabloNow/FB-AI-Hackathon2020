@@ -151,10 +151,11 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
       console.log(data.data.data);
       if(data.data.data.body) {
         var ind = randomIntFromInterval(0,data.data.data.body.items.length-1);
-        if($scope.premium) {
+        if(data.data.data.body.items[ind].track.id) {
           $scope.currentSongId = data.data.data.body.items[ind].track.id;
           $scope.initialId = $scope.currentSongId;
-     
+        }
+        if($scope.premium) {
           if(player_loaded) {
             play({playerInstance: player, spotify_uri: data.data.data.body.items[ind].track.uri})  
           } else {
