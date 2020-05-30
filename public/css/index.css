@@ -257,6 +257,33 @@ ul{
 .fa-pause:hover, .fa-play:hover{
   filter: invert(78%) sepia(9%) saturate(2527%) hue-rotate(154deg) brightness(1007%) contrast(103%);
 }
+.modal-content{
+  position: relative;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  width: 100%;
+  pointer-events: auto;
+  background-color: #111;
+  background-clip: padding-box;
+  border: 1px solid #616467;
+  outline: 0;
+}
+.close{
+  color: #616467;
+  opacity: 1;
+  text-shadow: 0 0 0;
+}
+.close:hover{
+  color: #61DBFB;
+}
+.modal-header{
+  border-bottom: 1px solid #616467;
+}
+.modal-footer{
+  border-top: 1px solid #616467;
+}
 @keyframes startup{
   from{
 
