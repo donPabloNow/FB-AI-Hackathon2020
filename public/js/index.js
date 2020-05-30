@@ -37,6 +37,7 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
   $scope.currentSongId;
   $scope.initialId;
   $scope.playing = false;
+  $scope.premium = true;
   $scope.changeActive = function(id) {
     document.getElementById($scope.currid).className = 'nav-link'; 
     document.getElementById(id).className = 'nav-link active';
@@ -57,6 +58,7 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
     var q =$scope.search;
     var id=$scope.currentSongId;
     var packet = {q, id};
+    if(!$scope.premium) packet.nonPremium = true;
     socket.emit('query', packet);
     socket.on('query_response', function(data) {
       $scope.$apply(function () {
@@ -99,7 +101,7 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
     }).then( function(result){
       $scope.userInfo = result;
       if(!$scope.userInfo.product || $scope.userInfo.product != 'premium') {
-        console.log($scope.userInfo.product);
+        $scope.premium = false;
         jq('#non-premium').modal('show');
       }
     })
@@ -136,30 +138,38 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
     id == $scope.initialId ? id = null : id; 
     $scope.playing = true;
     $scope.runCheck(id);
-    setInterval(() => {
-      var id = $scope.currentSongId;
-      id == $scope.initialId ? id = null : id; 
-      $scope.runCheck(id);
-    }, 10000);
+    if($scope.premium) {
+      setInterval(() => {
+        var id = $scope.currentSongId;
+        id == $scope.initialId ? id = null : id; 
+        $scope.runCheck(id);
+      }, 10000);
+    }
   }
   $scope.getMyRecent = function() {
     $http.get("/getMyRecent").then(function(data) {
       console.log(data.data.data);
       if(data.data.data.body) {
         var ind = randomIntFromInterval(0,data.data.data.body.items.length-1);
-        $scope.currentSongId = data.data.data.body.items[ind].track.id;
-        $scope.initialId = $scope.currentSongId;
-        if(player_loaded) {
-          play({playerInstance: player, spotify_uri: data.data.data.body.items[ind].track.uri})
+        if($scope.premium) {
+          $scope.currentSongId = data.data.data.body.items[ind].track.id;
+          $scope.initialId = $scope.currentSongId;
+     
+          if(player_loaded) {
+            play({playerInstance: player, spotify_uri: data.data.data.body.items[ind].track.uri})  
+          } else {
+            var watch = setInterval(() => {
+              if(player_loaded) {
+                play({playerInstance: player, spotify_uri: data.data.data.body.items[ind].track.uri})
+                clearInterval(watch);
+              }
+            });
+          }
+         $scope.currentSong = $sce.trustAsHtml('<iframe src="https://open.spotify.com/embed/track/'+data.data.data.body.items[ind].track.id+'" width="100%" height="'+ih+'" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>');
         } else {
-          var watch = setInterval(() => {
-            if(player_loaded) {
-              play({playerInstance: player, spotify_uri: data.data.data.body.items[ind].track.uri})
-              clearInterval(watch);
-            }
-          });
+          $scope.currentSongId = '06AKEBrKUckW0KREUWRnvT';
+          $scope.currentSong = $sce.trustAsHtml('<iframe src="https://open.spotify.com/embed/track/'+$scope.currentSongId+'" width="100%" height="'+ih+'" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>');
         }
-        $scope.currentSong = $sce.trustAsHtml('<iframe src="https://open.spotify.com/embed/track/'+data.data.data.body.items[ind].track.id+'" width="100%" height="'+ih+'" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>');
       } else if(data.data.data !== 'x') {
         $scope.currentSongId = data.data.data.id;
         $scope.initialId = $scope.currentSongId;

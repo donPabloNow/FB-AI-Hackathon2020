@@ -214,10 +214,20 @@ var determine_change = function(changeData, feats) {
   }
 }
 
+
+
 io.on('connection', function(socket){ 
 
+  function nonPremiumSearch(packet) {
+    console.log('searchng non-premium w/ ', packet);
+
+  }
+
   socket.on('query', function(packet) { //take query and current song id
-    console.log(packet)
+    if(packet.nonPremium){
+      nonPremiumSearch(packet);
+      return;
+    }
     client.message(packet.q, {}).then((data) => { //parse string into entities
         console.log(packet.id);
         var targets = {};
