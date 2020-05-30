@@ -252,7 +252,7 @@ canvas{
   cursor: pointer;
 }
 ul{
-  margin-top: -14px;
+  margin-top: -9px;
 }
 .fa-pause:hover, .fa-play:hover{
   filter: invert(78%) sepia(9%) saturate(2527%) hue-rotate(154deg) brightness(1007%) contrast(103%);
@@ -283,6 +283,12 @@ ul{
 }
 .modal-footer{
   border-top: 1px solid #616467;
+}
+.fa-desktop{
+  padding-top: 6px;
+}
+.fa-2x{
+  font-size: 1.7em;
 }
 @keyframes startup{
   from{

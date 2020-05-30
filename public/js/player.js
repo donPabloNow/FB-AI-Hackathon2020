@@ -25,7 +25,7 @@ window.onSpotifyWebPlaybackSDKReady = () => {
   const urlParams = new URLSearchParams(queryString);
   const token = urlParams.get('token')
   player = new Spotify.Player({
-    name: 'Web Playback SDK Quick Start Player',
+    name: 'Flux Browser Player',
     getOAuthToken: cb => { cb(token); },
     volume: .5
   });
