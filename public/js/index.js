@@ -23,7 +23,6 @@ function checkMobile(){
 var ih = 80;
 if(checkMobile()) ih = 500;
 
-
 app.controller("mainController", ['$scope','$http','$sce', function($scope, $http, $sce) {
   $scope.view = 0;
   $scope.currid = "home";
@@ -38,6 +37,7 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
   $scope.initialId;
   $scope.playing = false;
   $scope.premium = true;
+  $scope.devices = {};
   $scope.changeActive = function(id) {
     document.getElementById($scope.currid).className = 'nav-link'; 
     document.getElementById(id).className = 'nav-link active';
@@ -157,11 +157,13 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
         }
         if($scope.premium) {
           if(player_loaded) {
-            play({playerInstance: player, spotify_uri: data.data.data.body.items[ind].track.uri})  
+            play({playerInstance: player, spotify_uri: data.data.data.body.items[ind].track.uri});
+            $scope.getDevices();  
           } else {
             var watch = setInterval(() => {
               if(player_loaded) {
-                play({playerInstance: player, spotify_uri: data.data.data.body.items[ind].track.uri})
+                play({playerInstance: player, spotify_uri: data.data.data.body.items[ind].track.uri});
+                $scope.getDevices(); 
                 clearInterval(watch);
               }
             });
@@ -181,6 +183,26 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
       }
     })
   }
+  $scope.getDevices = function() { 
+    $http.get('/getDevices').then(function(data) {
+      let numDevices = data.data.data.body.devices.length;
+      $scope.devices = {};
+      var content = '';
+      for(let i = 0; i < numDevices; i++) {
+        $scope.devices[i] = data.data.data.body.devices[i];
+        content += '<h3>'+$scope.devices[i].name+'</h3>';
+      }
+      tippy('.fa-desktop', {
+        content: 'Global content',
+        trigger: 'click',
+        content: content,
+        allowHTML: true,
+      });
+    });
+  }
+
+
+
   mic.onresult = function (intent, entities, res) {
     console.log(res.msg_body);
     if(res.msg_body) {

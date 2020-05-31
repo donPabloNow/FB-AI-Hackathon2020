@@ -140,6 +140,12 @@ app.get('/currentlyPlaying', function(req, res) {
   }).catch(function(err){});
 })
 
+app.get('/getDevices', function(req, res) {
+  spotifyApi.getMyDevices().then(function(data) {
+    res.json({data:data});
+  });
+})
+
 var determine_change = function(changeData, feats) {
   console.log(changeData.entities);
   var changeString = changeData.entities.intent[0].value;
@@ -295,10 +301,10 @@ io.on('connection', function(socket){
   });
 
   socket.on('pause', function() {
-    spotifyApi.pause();
+    spotifyApi.pause().catch(function(err){console.log("error pausing playback")});
   })
   socket.on('play', function() {
-    spotifyApi.play();
+    spotifyApi.play().catch(function(err){console.log("error playing playback")});
   });
 
 });

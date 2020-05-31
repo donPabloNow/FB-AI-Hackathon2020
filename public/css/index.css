@@ -285,7 +285,11 @@ ul{
   border-top: 1px solid #616467;
 }
 .fa-desktop{
+  cursor: pointer;
   padding-top: 6px;
+}
+.fa-desktop:hover{
+  filter: invert(78%) sepia(9%) saturate(2527%) hue-rotate(154deg) brightness(1007%) contrast(103%);
 }
 .fa-2x{
   font-size: 1.7em;
