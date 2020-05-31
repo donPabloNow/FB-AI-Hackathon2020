@@ -6,10 +6,10 @@ function randomIntFromInterval(min, max) { // min and max included
 }
 // Convert ms to Hours/Minutes
 function msToHMS( ms ) {
-  var seconds = ms / 1000; // 1- Convert to seconds
-  var hours = parseInt( seconds / 3600 ); // 2- Extract hours
+  let seconds = ms / 1000; // 1- Convert to seconds
+  let hours = parseInt( seconds / 3600 ); // 2- Extract hours
   seconds = seconds % 3600;
-  var minutes = parseInt( seconds / 60 ); // 3- Extract minutes
+  let minutes = parseInt( seconds / 60 ); // 3- Extract minutes
   seconds = seconds % 60; // 4- Keep only seconds not extracted to minutes
   if(hours)
     return ( hours+" hr "+minutes+" min ");
@@ -17,19 +17,13 @@ function msToHMS( ms ) {
     return ( minutes+"m "+parseInt(seconds)+"s" );
 }
 
-function checkMobile(){
-  return (document.getElementById('result').style.display == 'block');
-}
 var ih = 80;
-if(checkMobile()) ih = 500;
+const iframe_H1 = '<iframe id="audioframe" src="https://open.spotify.com/embed/track/';
+const iframe_H2 = '" width="100%" height="'+ih+'" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>';
 
-app.controller("mainController", ['$scope','$http','$sce', function($scope, $http, $sce) {
-  $scope.view = 0;
-  $scope.currid = "home";
+app.controller("mainController", ['$scope','$http','$sce', ($scope, $http, $sce) => {
   $scope.search = "";
   $scope.results = {};
-  $scope.top = [];
-  $scope.arts = [];
   $scope.features = {};
   $scope.userInfo;
   $scope.currentSong;
@@ -39,31 +33,26 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
   $scope.premium = true;
   $scope.devices = {};
   $scope.deviceId;
-  $scope.changeActive = function(id) {
-    document.getElementById($scope.currid).className = 'nav-link'; 
-    document.getElementById(id).className = 'nav-link active';
-    $scope.currid = id;
-  }
 
-  $scope.pause = function() {
+  $scope.pause = () => {
     if($scope.premium) socket.emit('pause');
     $scope.playing = false;
   }
 
-  $scope.play = function() {
+  $scope.play = () => {
     if($scope.premium) socket.emit('play');
     $scope.playing = true;
   }
 
-  $scope.query = function() {
+  $scope.query = () => {
     let q =$scope.search;
     let id=$scope.currentSongId;
     let deviceId = $scope.deviceId;
     var packet = {q, id, deviceId}
     if(!$scope.premium) packet.nonPremium = true;
     socket.emit('query', packet);
-    socket.on('query_response', function(data) {
-      $scope.$apply(function () {
+    socket.on('query_response', (data) => {
+      $scope.$apply(() => {
         $scope.playing = true;
         $scope.currentSongId = data[0].id;
         $scope.features = {};
@@ -76,29 +65,29 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
         $scope.features[6] = ([data[1].body.liveness,'Liveness']);
         $scope.features[7] = ([data[1].body.valence,'Valence']);
         $scope.features[8] = ([data[1].body.tempo,'Tempo']);
-        $scope.currentSong = $sce.trustAsHtml('<iframe id="audioframe" src="https://open.spotify.com/embed/track/'+data[0].id+'" width="100%" height="'+ih+'" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>');
+        $scope.currentSong = $sce.trustAsHtml(iframe_H1+data[0].id+iframe_H2);
       });
     })
-    socket.on('play', function() {
-      $scope.$apply(function () {
+    socket.on('play', () => {
+      $scope.$apply(() => {
         $scope.playing = true;
       });
     });
-    socket.on('pause', function() {
-      $scope.$apply(function () {
+    socket.on('pause', () => {
+      $scope.$apply(() => {
         $scope.playing = false;
       });
     });
   }
-  $scope.login = function(){
-    $http.get("/authUrl/").then(function(data) {
+  $scope.login = () => {
+    $http.get("/authUrl/").then((data) => {
       window.location = data.data.authUrl;
     });
   }
-  $scope.user = function(){
-    $http.get("/userInfo/").then(function(data) {
+  $scope.user = () => {
+    $http.get("/userInfo/").then((data) => {
       return data.data.user;
-    }).then( function(result){
+    }).then( (result) =>{
       $scope.userInfo = result;
       if(!$scope.userInfo.product || $scope.userInfo.product != 'premium') {
         $scope.premium = false;
@@ -106,18 +95,18 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
       }
     })
   }
-  $scope.logout = function(){
+  $scope.logout = () => {
     socket.emit('logout');
-    socket.on('resp', function(url){
+    socket.on('resp', (url) =>{
       window.location=url;
     })
   }
 
-  $scope.runCheck = function(id) {
-    $http.get("/currentlyPlaying?id="+id).then(function(data) {
+  $scope.runCheck = (id) => {
+    $http.get("/currentlyPlaying?id="+id).then((data) => {
       if(data.data.data) {
         $scope.currentSongId = data.data.data.body.item.id;
-        $scope.currentSong = $sce.trustAsHtml('<iframe src="https://open.spotify.com/embed/track/'+data.data.data.body.item.id+'" width="100%" height="'+ih+'" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>');
+        $scope.currentSong = $sce.trustAsHtml(iframe_H1+data.data.data.body.item.id+iframe_H2);
         $scope.features = {};
         $scope.features[0] = ([data.data.feats.body.danceability,'Danceability']);
         $scope.features[1] = ([data.data.feats.body.energy,'Energy']);
@@ -132,7 +121,7 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
     });
   }
 
-  $scope.checkCurrent = function(){
+  $scope.checkCurrent = () => {
     var id = $scope.currentSongId;
     id == $scope.initialId ? id = null : id; 
     $scope.playing = true;
@@ -145,8 +134,8 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
       }, 10000);
     }
   }
-  $scope.getMyRecent = function() {
-    $http.get("/getMyRecent").then(function(data) {
+  $scope.getMyRecent = () => {
+    $http.get("/getMyRecent").then((data) => {
       if(data.data.id){
         $scope.deviceId = data.data.id;
         $scope.getDevices();  
@@ -170,22 +159,22 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
               }
             });
           }
-         $scope.currentSong = $sce.trustAsHtml('<iframe src="https://open.spotify.com/embed/track/'+data.data.data.body.items[ind].track.id+'" width="100%" height="'+ih+'" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>');
+         $scope.currentSong = $sce.trustAsHtml(iframe_H1+data.data.data.body.items[ind].track.id+iframe_H2);
         } else {
           $scope.currentSongId = '06AKEBrKUckW0KREUWRnvT'; //just pick a random one if theyve never played anything on spotify
-          $scope.currentSong = $sce.trustAsHtml('<iframe src="https://open.spotify.com/embed/track/'+$scope.currentSongId+'" width="100%" height="'+ih+'" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>');
+          $scope.currentSong = $sce.trustAsHtml(iframe_H1+$scope.currentSongId+iframe_H2);
         }
       } else if(data.data.data !== 'x') {
         $scope.currentSongId = data.data.data.id;
         $scope.initialId = $scope.currentSongId;
-        $scope.currentSong = $sce.trustAsHtml('<iframe src="https://open.spotify.com/embed/track/'+data.data.data.id+'" width="100%" height="'+ih+'" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>');
+        $scope.currentSong = $sce.trustAsHtml(iframe_H1+data.data.data.id+iframe_H2);
       } else {
         $scope.currentSong =  $sce.trustAsHtml('<p class="text-center">No device found! Open a Spotify player on any device and refresh this page!</p>')
       }
     })
   }
-  $scope.getDevices = function() { 
-    $http.get('/getDevices').then(function(data) {
+  $scope.getDevices = () => { 
+    $http.get('/getDevices').then((data) => {
       let numDevices = data.data.data.body.devices.length;
       $scope.devices = {};
       var content = '';
@@ -217,12 +206,12 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
     allowHTML: true,
   });
 
-  changeDevice = async function(id){
+  changeDevice = async (id) =>{
     $scope.deviceId = id;
     socket.emit('transfer', id);
   }
 
-  mic.onresult = function (intent, entities, res) {
+  mic.onresult = (intent, entities, res) => {
     console.log(res.msg_body);
     if(res.msg_body) {
       $scope.search = res.msg_body;
