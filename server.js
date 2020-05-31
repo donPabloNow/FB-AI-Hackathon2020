@@ -54,7 +54,7 @@ app.get('/callback', (req, res) => {
 // Returns JSON data about user
 app.get('/userInfo/', (req, res) => {
   spotifyApi.getMe()
-    .then(data => data.body)
+    .then(data => res.json({data: data.body}))
     .catch(err => console.log("error getting userInfo: ",err.statusCode));
 });
 
@@ -106,7 +106,6 @@ app.get('/radio', (req, res) => {
 });
 
 app.get('/currentlyPlaying', (req, res) => {
-  console.log('Hoppe')
   spotifyApi.getMyCurrentPlayingTrack().then(data => {
     var time_left = data.body.item.duration_ms - data.body.progress_ms;
     if(time_left < 11000) {
@@ -116,7 +115,6 @@ app.get('/currentlyPlaying', (req, res) => {
       }).catch((err) => console.log('error getting new recs', err));
     }
     spotifyApi.getAudioFeaturesForTrack(data.body.item.id).then((feats) => {
-      console.log('Yo')
       res.json({data:data, feats: feats});
     }).catch((err) => console.log('Error getting audio features for current song: ', err.statusCode))
   }).catch((err) => {console.log(err)});

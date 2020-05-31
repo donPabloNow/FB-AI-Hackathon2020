@@ -72,7 +72,7 @@ app.controller("mainController", ['$scope','$http','$sce', ($scope, $http, $sce)
   }
   $scope.user = () => {
     $http.get("/userInfo/").then((data) => {
-      return data.data.user;
+      return data.data.data;
     }).then( (result) =>{
       $scope.userInfo = result;
       if(!$scope.userInfo.product || $scope.userInfo.product != 'premium') {
