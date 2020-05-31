@@ -1,6 +1,4 @@
 # Flux
-A fully voice controlled song reccomendation and player for Spotify powered by wit.ai and the Spotify API
-
-NOTE: requires spotify premium and an open spotify player
+A fully voice controlled song recomendation and player for Spotify powered by wit.ai and the Spotify API
 
 https://fluxdj.herokuapp.com/
