@@ -307,6 +307,9 @@ io.on('connection', function(socket){
   socket.on('play', function() {
     spotifyApi.play().catch(function(err){console.log("error playing playback")});
   });
+  socket.on('transfer', function(id) {
+    spotifyApi.transferMyPlayback({deviceIds: [id], play: true}).catch(function(err) {console.log(err)});
+  });
 
 });
 

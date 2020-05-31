@@ -149,6 +149,7 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
     $http.get("/getMyRecent").then(function(data) {
       if(data.data.id){
         $scope.deviceId = data.data.id;
+        $scope.getDevices();  
       }
       if(data.data.data.body) {
         var ind = randomIntFromInterval(0,data.data.data.body.items.length-1);
@@ -171,7 +172,7 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
           }
          $scope.currentSong = $sce.trustAsHtml('<iframe src="https://open.spotify.com/embed/track/'+data.data.data.body.items[ind].track.id+'" width="100%" height="'+ih+'" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>');
         } else {
-          $scope.currentSongId = '06AKEBrKUckW0KREUWRnvT';
+          $scope.currentSongId = '06AKEBrKUckW0KREUWRnvT'; //just pick a random one if theyve never played anything on spotify
           $scope.currentSong = $sce.trustAsHtml('<iframe src="https://open.spotify.com/embed/track/'+$scope.currentSongId+'" width="100%" height="'+ih+'" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>');
         }
       } else if(data.data.data !== 'x') {
@@ -210,9 +211,8 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
   });
 
   changeDevice = async function(id){
-    $scope.search = 'play';
     $scope.deviceId = id;
-    $scope.query();
+    socket.emit('transfer', id);
   }
 
   mic.onresult = function (intent, entities, res) {
