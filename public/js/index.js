@@ -4,19 +4,6 @@ jq = jQuery.noConflict();
 function randomIntFromInterval(min, max) { // min and max included 
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
-// Convert ms to Hours/Minutes
-function msToHMS( ms ) {
-  let seconds = ms / 1000; // 1- Convert to seconds
-  let hours = parseInt( seconds / 3600 ); // 2- Extract hours
-  seconds = seconds % 3600;
-  let minutes = parseInt( seconds / 60 ); // 3- Extract minutes
-  seconds = seconds % 60; // 4- Keep only seconds not extracted to minutes
-  if(hours)
-    return ( hours+" hr "+minutes+" min ");
-  else
-    return ( minutes+"m "+parseInt(seconds)+"s" );
-}
-
 var ih = 80;
 const iframe_H1 = '<iframe id="audioframe" src="https://open.spotify.com/embed/track/';
 const iframe_H2 = '" width="100%" height="'+ih+'" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>';
@@ -28,7 +15,6 @@ app.controller("mainController", ['$scope','$http','$sce', ($scope, $http, $sce)
   $scope.userInfo;
   $scope.currentSong;
   $scope.currentSongId;
-  $scope.initialId;
   $scope.playing = false;
   $scope.premium = true;
   $scope.devices = {};
@@ -102,8 +88,8 @@ app.controller("mainController", ['$scope','$http','$sce', ($scope, $http, $sce)
     })
   }
 
-  $scope.runCheck = (id) => {
-    $http.get("/currentlyPlaying?id="+id).then((data) => {
+  $scope.runCheck = () => {
+    $http.get("/currentlyPlaying").then((data) => {
       if(data.data.data) {
         $scope.currentSongId = data.data.data.body.item.id;
         $scope.currentSong = $sce.trustAsHtml(iframe_H1+data.data.data.body.item.id+iframe_H2);
@@ -122,15 +108,11 @@ app.controller("mainController", ['$scope','$http','$sce', ($scope, $http, $sce)
   }
 
   $scope.checkCurrent = () => {
-    var id = $scope.currentSongId;
-    id == $scope.initialId ? id = null : id; 
     $scope.playing = true;
-    $scope.runCheck(id);
+    $scope.runCheck();
     if($scope.premium) {
       setInterval(() => {
-        var id = $scope.currentSongId;
-        id == $scope.initialId ? id = null : id; 
-        $scope.runCheck(id);
+        $scope.runCheck();
       }, 10000);
     }
   }
@@ -144,7 +126,6 @@ app.controller("mainController", ['$scope','$http','$sce', ($scope, $http, $sce)
         var ind = randomIntFromInterval(0,data.data.data.body.items.length-1);
         if(data.data.data.body.items[ind].track.id) {
           $scope.currentSongId = data.data.data.body.items[ind].track.id;
-          $scope.initialId = $scope.currentSongId;
         }
         if($scope.premium) {
           if(player_loaded) {
@@ -166,7 +147,6 @@ app.controller("mainController", ['$scope','$http','$sce', ($scope, $http, $sce)
         }
       } else if(data.data.data !== 'x') {
         $scope.currentSongId = data.data.data.id;
-        $scope.initialId = $scope.currentSongId;
         $scope.currentSong = $sce.trustAsHtml(iframe_H1+data.data.data.id+iframe_H2);
       } else {
         $scope.currentSong =  $sce.trustAsHtml('<p class="text-center">No device found! Open a Spotify player on any device and refresh this page!</p>')
@@ -206,7 +186,7 @@ app.controller("mainController", ['$scope','$http','$sce', ($scope, $http, $sce)
     allowHTML: true,
   });
 
-  changeDevice = async (id) =>{
+  changeDevice = async id =>{
     $scope.deviceId = id;
     socket.emit('transfer', id);
   }
