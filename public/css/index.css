@@ -294,6 +294,10 @@ ul{
 .fa-2x{
   font-size: 1.7em;
 }
+.tooltip-button{
+  font-family: sans-serif;
+  display: block;
+}
 @keyframes startup{
   from{
 

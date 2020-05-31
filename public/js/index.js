@@ -38,6 +38,7 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
   $scope.playing = false;
   $scope.premium = true;
   $scope.devices = {};
+  $scope.deviceId;
   $scope.changeActive = function(id) {
     document.getElementById($scope.currid).className = 'nav-link'; 
     document.getElementById(id).className = 'nav-link active';
@@ -55,14 +56,14 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
   }
 
   $scope.query = function() {
-    var q =$scope.search;
-    var id=$scope.currentSongId;
-    var packet = {q, id}
+    let q =$scope.search;
+    let id=$scope.currentSongId;
+    let deviceId = $scope.deviceId;
+    var packet = {q, id, deviceId}
     if(!$scope.premium) packet.nonPremium = true;
     socket.emit('query', packet);
     socket.on('query_response', function(data) {
       $scope.$apply(function () {
-        var ind = 0;
         $scope.playing = true;
         $scope.currentSongId = data[0].id;
         $scope.features = {};
@@ -84,7 +85,6 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
       });
     });
     socket.on('pause', function() {
-      console.log('paused;')
       $scope.$apply(function () {
         $scope.playing = false;
       });
@@ -107,7 +107,6 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
     })
   }
   $scope.logout = function(){
-    console.log('logclick')
     socket.emit('logout');
     socket.on('resp', function(url){
       window.location=url;
@@ -148,7 +147,9 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
   }
   $scope.getMyRecent = function() {
     $http.get("/getMyRecent").then(function(data) {
-      console.log(data.data.data);
+      if(data.data.id){
+        $scope.deviceId = data.data.id;
+      }
       if(data.data.data.body) {
         var ind = randomIntFromInterval(0,data.data.data.body.items.length-1);
         if(data.data.data.body.items[ind].track.id) {
@@ -178,7 +179,6 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
         $scope.initialId = $scope.currentSongId;
         $scope.currentSong = $sce.trustAsHtml('<iframe src="https://open.spotify.com/embed/track/'+data.data.data.id+'" width="100%" height="'+ih+'" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>');
       } else {
-        console.log(data);
         $scope.currentSong =  $sce.trustAsHtml('<p class="text-center">No device found! Open a Spotify player on any device and refresh this page!</p>')
       }
     })
@@ -190,24 +190,36 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
       var content = '';
       for(let i = 0; i < numDevices; i++) {
         $scope.devices[i] = data.data.data.body.devices[i];
-        content += '<h3>'+$scope.devices[i].name+'</h3>';
+        content += '<button onclick="changeDevice(\''+$scope.devices[i].id+'\')" class="btn btn-outline-success tooltip-button">'+$scope.devices[i].name+'</button>';
       }
       tippy('.fa-desktop', {
         content: 'Global content',
         trigger: 'click',
+        interactive: true,
         content: content,
         allowHTML: true,
       });
     });
   }
 
+  tippy('.fa-desktop', {
+    content: 'Global content',
+    trigger: 'mouseenter focus',
+    content: "Devices Available",
+    allowHTML: true,
+  });
 
+  changeDevice = async function(id){
+    $scope.search = 'play';
+    $scope.deviceId = id;
+    $scope.query();
+  }
 
   mic.onresult = function (intent, entities, res) {
     console.log(res.msg_body);
     if(res.msg_body) {
       $scope.search = res.msg_body;
-      $scope.query()
+      $scope.query();
     }
     document.getElementById("result").innerHTML = res.msg_body;
   };

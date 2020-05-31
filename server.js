@@ -82,15 +82,16 @@ app.get('/getMyRecent', async function(req, res) {
   await spotifyApi.play().catch(function(err) {console.log('Error setting playback to play: ', err.statusCode)});
   await spotifyApi.getMyCurrentPlaybackState().then(function(resu) {
     if(resu.body.device) {
-      res.json({data: resu.body.item});
+      res.json({data: resu.body.item, id: resu.body.device.id});
     } else {
       spotifyApi.getMyDevices().then(async function(data) {
         console.log(data.body.devices); //if this is a empty array we need to tell the user to turn on a spotify player
         if(data.body.devices.length) {
+          console.log(data.body.devices[0].id);
           await spotifyApi.play({device_id: data.body.devices[0].id}).catch(function(err) {console.log('Error setting playback to play: ', err.statusCode)});
           spotifyApi.getMyCurrentPlaybackState().then(function(resu) {
             if(resu.body.device) {
-              res.json({data: resu.body.item});
+              res.json({data: resu.body.item, id: resu.body.device.id});
             }
           }).catch(function(err){console.log('Error getting current playback state: ',err)});
         } else {
@@ -226,7 +227,7 @@ io.on('connection', function(socket){
 
   socket.on('query', function(packet) { //take query and current song id
     client.message(packet.q, {}).then((data) => { //parse string into entities
-        console.log(packet.id);
+        console.log(packet.q, packet.id, packet.deviceId);
         var targets = {};
         if(data) {
           console.log(data.entities);
@@ -238,7 +239,7 @@ io.on('connection', function(socket){
               spotifyApi.getRecommendations({limit: 50, seed_tracks: [packet.id], targets}).then(function(recs) {
                 let ind = randomIntFromInterval(0, recs.body.tracks.length-1);
                 spotifyApi.getAudioFeaturesForTrack(recs.body.tracks[ind].id).then(async function(feats) {
-                  if(!packet.nonPremium) spotifyApi.play({uris: [recs.body.tracks[ind].uri]}).then(function(res) {
+                  if(!packet.nonPremium) spotifyApi.play({device_id: packet.deviceId, uris: [recs.body.tracks[ind].uri]}).then(function(res) {
                     socket.emit('query_response', [recs.body.tracks[ind], feats]);
                   }).catch(function(err) {
                     console.log('Error adding song to queue: ', err.statusCode);
@@ -269,7 +270,7 @@ io.on('connection', function(socket){
 
               //get audio features and start playing the song
               spotifyApi.getAudioFeaturesForTrack(id).then(function(test) {
-                if(!packet.nonPremium) spotifyApi.play({uris: [data.body.tracks.items[ind].uri]}).then(function(res) {
+                if(!packet.nonPremium) spotifyApi.play({device_id: packet.deviceId, uris: [data.body.tracks.items[ind].uri]}).then(function(res) {
                   socket.emit('query_response', [data.body.tracks.items[ind], test]);
                 }).catch(function(err){'Error adding search song to queue', err.statusCode});
                 else socket.emit('query_response', [data.body.tracks.items[ind], test]);
@@ -278,10 +279,10 @@ io.on('connection', function(socket){
             }).catch(function(err){'Error resolving the search', err.statusCode});
 
           } else if(data.entities.intent && data.entities.intent[0].value == 'Pause'){
-            if(!packet.nonPremium) spotifyApi.pause(); 
+            if(!packet.nonPremium) spotifyApi.pause({device_id: packet.deviceId}).catch(function(err){console.log(err)});
             socket.emit('pause');
           }else if(data.entities.intent && data.entities.intent[0].value == 'Play'){
-            if(!packet.nonPremium) spotifyApi.play();
+            if(!packet.nonPremium) spotifyApi.play({device_id: packet.deviceId}).catch(function(err){console.log(err)});
             socket.emit('play');
           } else {
             console.log("Couldnt understand the request");//bad data
