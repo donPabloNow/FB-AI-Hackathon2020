@@ -302,8 +302,6 @@ ul{
   border-radius: 0px;
   box-shadow: 1px 1px 8px black;
 }
-.tippy-content{
-}
 .active{
   color: #61DBFB!important;
   background-color: transparent!important;
@@ -312,7 +310,7 @@ ul{
   color:#61DBFB!important;
 }
 .tool-box{
-  padding: 5px 9px;
+  padding: 5px 19px;
   width: calc(100% + 18px);
   padding-bottom: 11px;
   margin-left: -9px;
