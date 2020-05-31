@@ -191,7 +191,14 @@ app.controller("mainController", ['$scope','$http','$sce', function($scope, $htt
       var content = '';
       for(let i = 0; i < numDevices; i++) {
         $scope.devices[i] = data.data.data.body.devices[i];
-        content += '<button onclick="changeDevice(\''+$scope.devices[i].id+'\')" class="btn btn-outline-success tooltip-button">'+$scope.devices[i].name+'</button>';
+        let classes = data.data.data.body.devices[i].is_active ? "btn btn-outline-success tooltip-button active" : "btn btn-outline-success tooltip-button";
+        let ico = data.data.data.body.devices[i].is_active ? "fa fa-laptop iactive" : "fa fa-laptop";
+        let subclasses = data.data.data.body.devices[i].is_active ? "tool-subtitle active" : "tool-subtitle";
+        content += '<div class="tool-box">\
+                      <i class="'+ico+'"></i>\
+                      <button onclick="changeDevice(\''+$scope.devices[i].id+'\')" class="'+classes+'">'+$scope.devices[i].name+'</button>\
+                      <div class="'+subclasses+'">Spotify Connect</div>\
+                    </div>';
       }
       tippy('.fa-desktop', {
         content: 'Global content',

@@ -295,8 +295,41 @@ ul{
   font-size: 1.7em;
 }
 .tooltip-button{
-  font-family: sans-serif;
-  display: block;
+  font-family: 'Poppins';
+  color: white;
+}
+.tippy-box{
+  border-radius: 0px;
+  box-shadow: 1px 1px 8px black;
+  padding: 0px;
+}
+.tippy-content{
+  padding: 0px!important;
+}
+.active{
+  color: #61DBFB!important;
+  background-color: transparent!important;
+}
+.iactive{
+  color:#61DBFB!important;
+}
+.tool-box{
+  padding: 5px 9px;
+  width: 100%;
+  padding-bottom: 11px;
+}
+.tool-box:hover{
+  background-color: rgba(100,100,100,.3);
+}
+.tool-subtitle{
+  font-family: 'Poppins';
+  font-size: 11px;
+  margin-left: 33px;
+  margin-top: -2px;
+}
+.fa-laptop{
+  font-size: 18px;
+  vertical-align: -12px;
 }
 @keyframes startup{
   from{
