@@ -106,18 +106,19 @@ app.get('/radio', (req, res) => {
 });
 
 app.get('/currentlyPlaying', (req, res) => {
-  console.log('Running...');
   spotifyApi.getMyCurrentPlayingTrack().then(data => {
-    var time_left = data.body.item.duration_ms - data.body.progress_ms;
-    if(time_left < 11000) {
-      spotifyApi.getRecommendations({limit: 50, seed_tracks: [data.body.item.id]}).then(recs => {
-        let ind = randomIntFromInterval(0,recs.body.tracks.length-1);
-        spotifyApi.addToQueue(recs.body.tracks[ind].uri).catch(err => console.log('error adding to queue', err));
-      }).catch((err) => console.log('error getting new recs', err));
+    if(data.body.item) {
+      var time_left = data.body.item.duration_ms - data.body.progress_ms;
+      if(time_left < 11000) {
+        spotifyApi.getRecommendations({limit: 50, seed_tracks: [data.body.item.id]}).then(recs => {
+          let ind = randomIntFromInterval(0,recs.body.tracks.length-1);
+          spotifyApi.addToQueue(recs.body.tracks[ind].uri).catch(err => console.log('error adding to queue', err));
+        }).catch((err) => console.log('error getting new recs', err));
+      }
+      spotifyApi.getAudioFeaturesForTrack(data.body.item.id).then((feats) => {
+        res.json({data:data, feats: feats});
+      }).catch((err) => console.log('Error getting audio features for current song: ', err.statusCode))
     }
-    spotifyApi.getAudioFeaturesForTrack(data.body.item.id).then((feats) => {
-      res.json({data:data, feats: feats});
-    }).catch((err) => console.log('Error getting audio features for current song: ', err.statusCode))
   }).catch((err) => {console.log(err)});
 })
 
