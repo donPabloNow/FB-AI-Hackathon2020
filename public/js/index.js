@@ -1,5 +1,6 @@
 var app = angular.module("myApp", []);
 var socket = io();
+var checking; 
 jq = jQuery.noConflict();
 function randomIntFromInterval(min, max) { // min and max included 
   return Math.floor(Math.random() * (max - min + 1) + min);
@@ -23,11 +24,13 @@ app.controller("mainController", ['$scope','$http','$sce', ($scope, $http, $sce)
   $scope.pause = () => {
     if($scope.premium) socket.emit('pause');
     $scope.playing = false;
+    clearInterval(checking);
   }
 
   $scope.play = () => {
     if($scope.premium) socket.emit('play');
     $scope.playing = true;
+    $scope.checkCurrent();
   }
 
   $scope.query = () => {
@@ -57,11 +60,13 @@ app.controller("mainController", ['$scope','$http','$sce', ($scope, $http, $sce)
     socket.on('play', () => {
       $scope.$apply(() => {
         $scope.playing = true;
+        $scope.checkCurrent();
       });
     });
     socket.on('pause', () => {
       $scope.$apply(() => {
         $scope.playing = false;
+        clearInterval(checking);
       });
     });
   }
@@ -111,7 +116,7 @@ app.controller("mainController", ['$scope','$http','$sce', ($scope, $http, $sce)
     $scope.playing = true;
     $scope.runCheck();
     if($scope.premium) {
-      setInterval(() => {
+      checking = setInterval(() => {
         $scope.runCheck();
       }, 10000);
     }

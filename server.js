@@ -106,6 +106,7 @@ app.get('/radio', (req, res) => {
 });
 
 app.get('/currentlyPlaying', (req, res) => {
+  console.log('Running...');
   spotifyApi.getMyCurrentPlayingTrack().then(data => {
     var time_left = data.body.item.duration_ms - data.body.progress_ms;
     if(time_left < 11000) {
