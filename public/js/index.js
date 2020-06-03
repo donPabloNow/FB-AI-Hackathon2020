@@ -168,7 +168,7 @@ app.controller("mainController", ['$scope','$http','$sce', ($scope, $http, $sce)
         let classes = data.data.data.body.devices[i].is_active ? "btn btn-outline-success tooltip-button active" : "btn btn-outline-success tooltip-button";
         let ico = data.data.data.body.devices[i].is_active ? "fa fa-laptop iactive" : "fa fa-laptop";
         let subclasses = data.data.data.body.devices[i].is_active ? "tool-subtitle active" : "tool-subtitle";
-        content += '<div class="tool-box">\
+        content = '<div class="tool-box">\
                       <i class="'+ico+'"></i>\
                       <button onclick="changeDevice(\''+$scope.devices[i].id+'\')" class="'+classes+'">'+$scope.devices[i].name+'</button>\
                       <div class="'+subclasses+'">Spotify Connect</div>\
