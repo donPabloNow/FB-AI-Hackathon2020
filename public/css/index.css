@@ -406,7 +406,7 @@ ul{
     height: 100%;
     background-color: black;
     clip-path: polygon(0% 60%, 0% 0%, 100% 0%, 100% 40%);
-    animation: reveal-left 1s ease-out .4s 1;
+    animation: reveal-left 1s ease-out .1s 1;
     animation-fill-mode: forwards;
     animation-play-state: running;
   }

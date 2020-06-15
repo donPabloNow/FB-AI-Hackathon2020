@@ -141,6 +141,7 @@ app.controller("mainController", ['$scope','$http','$sce', ($scope, $http, $sce)
               if(player_loaded) {
                 play({playerInstance: player, spotify_uri: data.data.data.body.items[ind].track.uri});
                 $scope.getDevices(); 
+                $scope.runCheck();
                 clearInterval(watch);
               }
             });
