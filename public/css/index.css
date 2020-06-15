@@ -437,6 +437,10 @@ ul{
     to {
       clip-path: polygon(0% 0%, 0% 0%, 100% 0%, 100% -20%);
     }
+  } 
+}
+@media screen and (max-width: 800px) {
+  .welcome{
+    display: none!important;
   }
-  
 }

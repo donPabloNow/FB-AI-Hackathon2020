@@ -5,7 +5,7 @@ var prevLevels = new Array(60);
 
 
 function setup() {
-  c = createCanvas(windowWidth, windowHeight);
+  c = createCanvas(document.documentElement.clientWidth, document.documentElement.clientHeight);
   background(0);
   noStroke();
 
@@ -20,6 +20,10 @@ function setup() {
   amplitude = new p5.Amplitude();
   amplitude.setInput(mic_);
   amplitude.smooth(0.6);
+}
+
+function windowResized() {
+  resizeCanvas(document.documentElement.clientWidth, document.documentElement.clientHeight);
 }
 
 function draw() {
