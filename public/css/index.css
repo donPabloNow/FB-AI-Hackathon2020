@@ -166,6 +166,12 @@ h3{
 .land:hover{
   background-color: black;
   border-color: black;
+  color:white;
+}
+.land:focus, .land:focus:active{
+  background-color: black!important;
+  border: 3px solid black;
+  color:white;
 }
 .separator {
   position: relative;
