@@ -154,18 +154,14 @@ h3{
   letter-spacing: 1.3px;
   color: black;
   font-size: 23px;
-  padding: 0;
   font-weight: 700;
-  padding: 16px 80px 18px;
+  padding: 16px 80px 21px;
   line-height: 16px;
   border-radius: 500px;
   transition-duration: .3s;
-  border-width: 0;
-  letter-spacing: 2px;
-  min-width: 160px;
-  text-transform: uppercase;
-  white-space: normal;
+  letter-spacing: 1.4px;
   border: 3px solid black;
+  font-variant: all-small-caps;
 }
 .land:hover{
   background-color: black;
