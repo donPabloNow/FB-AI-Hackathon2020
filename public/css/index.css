@@ -187,7 +187,7 @@ h3{
   width: 100%;
   height: 100%;
   background-color: #61DBFB;
-  clip-path: polygon(0% 0%, -34% 100%, 100000000% 100%);
+  clip-path: polygon(-34% 100%, 0% 0%, 100% 0%, 100% 100%);
   animation: startup 1s ease-out 100ms 1;
   animation-fill-mode: forwards;
   animation-play-state: running;
@@ -348,7 +348,7 @@ ul{
 
   }
   to{
-    clip-path: polygon(70% 0%, 36% 100%, 100000000% 100%);
+    clip-path: polygon(36% 100%, 70% 0%, 100% 0%, 100% 100%);
   }
 }
 @keyframes fadeIn {
@@ -375,20 +375,57 @@ ul{
     clip-path: polygon(0% 100%, 0% 0%, 0% 0%, -34% 100%);
   }
 }
-@media (hover: none) {
-  nav{
-    min-height: 140px;
-    font-size: 19px;
+
+@media screen and (max-width: 1000px) {
+  .separator::before {
+    position: absolute;
+    content: "";
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    clip-path: polygon(0% 50%, 0% 0%, 100% 50%, 100% 50%);
   }
-  .navbar-brand{
-    font-size: 44px;
+  
+  .separator::after {
+    position: absolute;
+    content: "";
+    width: 100%;
+    height: 100%;
+    background-color: #61DBFB;
+    clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+    animation: startup 1s ease-out 100ms 1;
+    animation-fill-mode: forwards;
+    animation-play-state: running;
   }
-  .btn{
-    font-size: 30px;
+  
+  .radio-open::before {
+    z-index: 100;
+    position: absolute;
+    content: "";
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    clip-path: polygon(0% 50%, 0% 0%, 100% 50%, 100% 50%);
+    animation: reveal-left 1s ease-out .4s 1;
+    animation-fill-mode: forwards;
+    animation-play-state: running;
   }
-  .form-control{
-    font-size: 21px;
-    height:50px;
+  
+  .radio-open::after {
+    z-index: 10;
+    position: absolute;
+    content: "";
+    width: 100%;
+    height: 100%;
+    background-color: #61DBFB;
+    clip-path: polygon(0% 0%, -34% 100%, 100000000% 100%);
+    animation: reveal 1s ease-out .1s 1;
+    animation-fill-mode: forwards;
+    animation-play-state: running;
   }
-  #result{display: block}
+  @keyframes startup {
+    to {
+      clip-path: polygon(0% 50%, 100% 50%, 100% 100%, 0% 100%);
+    }
+  }
 }
