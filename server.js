@@ -104,6 +104,17 @@ app.get('/radio', (req, res) => {
   if(req.query.token !== spotifyApi.getAccessToken())
     res.redirect('/');
   res.sendFile(path.join(__dirname + '/public/radio.html'));
+  var refresher = setInterval(() => {
+    spotifyApi.refreshAccessToken().then(
+      function(data) {
+        console.log('The access token has been refreshed!');
+        spotifyApi.setAccessToken(data.body['access_token']);
+      },
+      function(err) {
+        console.log('Could not refresh access token', err);
+      }
+    );
+  }, 3600000);
 });
 
 app.get('/currentlyPlaying', (req, res) => {
