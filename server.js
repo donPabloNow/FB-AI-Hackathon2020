@@ -45,6 +45,7 @@ app.get('/callback', (req, res) => {
         // Set the access token on the API object to use it in later calls
         spotifyApi.setAccessToken(data.body.access_token);
         spotifyApi.setRefreshToken(data.body.refresh_token);
+        console.log('The token expires in ' + data.body['expires_in']);
       },
       err => console.log('Error granting auth code: ', err.statusCode))
     .then(() => res.redirect('/radio?token='+spotifyApi.getAccessToken()))
