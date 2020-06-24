@@ -11,4 +11,5 @@ Flux is a fully voice controlled interface for Spotify. Users can use voice comm
 The web application is built with an AngularJS frontend and Node.js for backend functionality. To extract audio and process language I used JavaScript MediaStreams and sent the data to a wit.ai instance. I Leveraged the Spotify API to handle song recommendations and interfacing with active devices. The microphone audio visualization is built with p5.js.
 
 # Demo
+**NOTICE: while the site will function with non-premium accounts, the Spotify API is not able to interface with non-premium players directly, so songs will have to be manually played through iframes**
 https://fluxdj.herokuapp.com/
