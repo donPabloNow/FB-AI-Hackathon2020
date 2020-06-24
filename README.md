@@ -12,4 +12,5 @@ The web application is built with an AngularJS frontend and Node.js for backend 
 
 # Demo
 **NOTICE: while the site will function with non-premium accounts, the Spotify API is not able to interface with non-premium players directly, so songs will have to be manually played through iframes**
+
 https://fluxdj.herokuapp.com/
